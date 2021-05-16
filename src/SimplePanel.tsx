@@ -14,7 +14,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   return (
     <>
     <div className={styles.app}>
-      <div className={styles.appContainer}>
+      <div className={`${styles.appContainer} flamegraph-wrapper`}>
         <FlameGraphRenderer viewType="single" renderURL="/render?name=pyroscope.server.alloc_objects%7B%7D" />
       </div>
     </div>
