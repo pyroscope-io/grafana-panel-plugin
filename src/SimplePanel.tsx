@@ -8,14 +8,19 @@ import FlameGraphRenderer from 'components/FlameGraphRenderer';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
+export const SimplePanel: React.FC<Props> = ({ options, data }) => {
   const theme = useTheme();
   const styles = getStyles();
   return (
     <>
     <div className={styles.app}>
       <div className={`${styles.appContainer} flamegraph-wrapper`}>
-        <FlameGraphRenderer viewType="single" renderURL="/render?name=pyroscope.server.alloc_objects%7B%7D" />
+        <FlameGraphRenderer
+          viewType="single"
+          renderURL="/render?name=pyroscope.server.alloc_objects%7B%7D"
+          options={options}
+          data={data}
+        />
       </div>
     </div>
     </>

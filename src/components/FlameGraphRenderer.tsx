@@ -64,7 +64,6 @@ class FlameGraphRenderer extends React.Component {
     this.rangeMin = 0;
     this.rangeMax = 1;
     this.query = "";
-
     const panelContainer = document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
     const panelContanerResizeObserver = new ResizeObserver(this.resizeHandler);
     panelContanerResizeObserver.observe(panelContainer);
@@ -79,11 +78,7 @@ class FlameGraphRenderer extends React.Component {
       );
     }
 
-    if(this.props.viewSide === 'left' || this.props.viewSide === 'right') {
-      this.fetchFlameBearerData(this.props[`${this.props.viewSide}RenderURL`])
-    } else {
-      this.fetchFlameBearerData(this.props.renderURL)
-    }
+    this.fetchFlameBearerData(this.props.renderURL)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -95,11 +90,7 @@ class FlameGraphRenderer extends React.Component {
       prevProps[`${this.props.viewSide}From`] != this.props[`${this.props.viewSide}From`] ||
       prevProps[`${this.props.viewSide}Until`] != this.props[`${this.props.viewSide}Until`]
     ) {
-      if(this.props.viewSide === 'left' || this.props.viewSide === 'right') {
-        this.fetchFlameBearerData(this.props[`${this.props.viewSide}RenderURL`])
-      } else {
-        this.fetchFlameBearerData(this.props.renderURL)
-      }
+      this.fetchFlameBearerData(this.props.renderURL)
     }
 
     if (
@@ -110,8 +101,8 @@ class FlameGraphRenderer extends React.Component {
     }
   }
 
-  fetchFlameBearerData(url) {
-    const flamebearer = {names:["total","runtime.mstart","runtime.mstart1","runtime.sysmon","runtime.usleep","runtime.startm","runtime.notewakeup","runtime.futexwakeup","runtime.futex","runtime.notetsleep","runtime.notetsleep_internal","runtime.futexsleep","runtime.nanotime","runtime.lockWithRank","runtime.lock2","runtime.morestack","runtime.newstack","runtime.gopreempt_m","runtime.goschedImpl","runtime.schedule","runtime.resetspinning","runtime.wakep","runtime.mcall","runtime.park_m","runtime.findrunnable","runtime.write","runtime.write1","runtime.stopm","runtime.notesleep","runtime.runqsteal","runtime.runqgrab","runtime.pidleput","runtime.netpoll","runtime.epollwait","runtime.checkTimers","runtime.runtimer","runtime.runOneTimer","time.sendTime","time.Now","runtime.walltime","net/http.(*conn).serve","net/http.serverHandler.ServeHTTP","net/http.(*ServeMux).ServeHTTP","net/http.HandlerFunc.ServeHTTP","github.com/pyroscope-io/pyroscope/pkg/server.(*Controller).ingestHandler","github.com/pyroscope-io/pyroscope/pkg/server.ingestParamsFromRequest","runtime.newobject","runtime.nextFreeFast","github.com/pyroscope-io/pyroscope/pkg/server.(*Controller).Start.func1","net/http.(*fileHandler).ServeHTTP","net/http.serveFile","net/http.serveContent","io.Copy","io.copyBuffer","net/http.(*response).ReadFrom","io.CopyBuffer","net/http.(*response).Write","net/http.(*response).write","bufio.(*Writer).Write","net/http.(*chunkWriter).Write","net/http.checkConnErrorWriter.Write","net.(*conn).Write","net.(*netFD).Write","internal/poll.(*FD).Write","internal/poll.ignoringEINTR","syscall.Write","syscall.write","syscall.Syscall","net/http.(*conn).readRequest","net/http.readRequest","net/textproto.(*Reader).ReadMIMEHeader","runtime.slicebytetostring","runtime.memmove","github.com/pyroscope-io/pyroscope/pkg/agent/upstream/direct.(*Direct).uploadLoop","github.com/pyroscope-io/pyroscope/pkg/agent/upstream/direct.(*Direct).safeUpload","github.com/pyroscope-io/pyroscope/pkg/agent/upstream/direct.(*Direct).uploadProfile","github.com/pyroscope-io/pyroscope/pkg/storage.(*Storage).Put","github.com/pyroscope-io/pyroscope/pkg/storage/cache.(*Cache).Get","github.com/pyroscope-io/pyroscope/pkg/storage/dimension.FromBytes","github.com/pyroscope-io/pyroscope/pkg/storage/dimension.Deserialize","io.ReadAtLeast","github.com/dgraph-io/badger/v2/y.(*WaterMark).process","runtime.selectgo","github.com/dgraph-io/badger/v2.(*levelsController).runCompactor","github.com/dgraph-io/badger/v2.(*levelsController).pickCompactLevels","sort.Slice","sort.quickSort_func"],levels:[[0,78,0,0],[0,2,1,83,0,1,0,81,0,1,0,73,0,3,0,40,0,49,0,22,0,1,0,15,0,21,0,1],[1,1,0,84,0,1,1,82,0,1,0,74,0,1,0,68,0,2,0,41,0,49,0,23,0,1,0,16,0,21,0,2],[1,1,0,85,1,1,0,75,0,1,0,69,0,2,0,42,0,49,0,19,0,1,0,17,0,6,6,12,0,15,0,3],[1,1,1,86,1,1,0,76,0,1,0,70,0,2,0,43,0,36,1,24,0,6,6,12,0,7,0,20,0,1,0,18,6,1,0,13,0,7,0,9,0,4,0,5,0,3,3,4],[3,1,0,77,0,1,0,71,0,1,0,48,0,1,0,44,1,8,0,34,0,13,13,12,0,8,0,32,0,1,1,31,0,1,0,29,0,3,0,27,0,1,0,25,6,7,0,21,0,1,0,19,6,1,1,14,0,4,4,12,0,3,0,10,0,4,0,6],[3,1,0,78,0,1,1,72,0,1,0,49,0,1,0,45,1,8,0,35,13,8,8,33,1,1,1,30,0,3,1,28,0,1,1,26,6,7,0,5,0,1,0,20,11,3,0,11,0,4,0,7],[3,1,0,79,1,1,0,50,0,1,0,46,1,8,0,36,24,2,0,11,7,7,0,6,0,1,0,21,11,3,3,8,0,4,4,8],[3,1,1,80,1,1,0,51,0,1,1,47,1,8,0,37,24,2,2,8,7,7,0,7,0,1,0,5],[5,1,0,52,2,8,0,38,33,7,7,8,0,1,0,6],[5,1,0,53,2,6,6,12,0,2,2,39,40,1,0,7],[5,1,0,54,50,1,1,8],[5,1,0,55],[5,1,0,53],[5,1,0,56],[5,1,0,57],[5,1,0,58],[5,1,0,59],[5,1,0,58],[5,1,0,60],[5,1,0,61],[5,1,0,62],[5,1,0,63],[5,1,0,64],[5,1,0,65],[5,1,0,66],[5,1,1,67]],"numTicks":78,"maxSelf":13,"spyName":"gospy","sampleRate":100,"units":"samples"},metadata:{sampleRate:100,spyName:"gospy",units:"samples"},timeline:{startTime:1621014100,samples:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,13,16,18,19,17,0],durationDelta:10};
+  fetchFlameBearerData() {
+    const flamebearer = this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0];
     deltaDiff(flamebearer.levels);
     this.setState({ ...this.state, flamebearer },
       () => {
