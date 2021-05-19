@@ -1,12 +1,12 @@
 {
   "$schema": "https://raw.githubusercontent.com/grafana/grafana/master/docs/sources/developers/plugins/plugin.schema.json",
   "type": "panel",
-  "name": "pyroscope-grafana",
-  "id": "pyroscope-pyroscope-grafana",
+  "name": "pyroscope-panel",
+  "id": "pyroscope-panel",
   "info": {
     "description": "Pyroscope plugin for grafana",
     "author": {
-      "name": "Mike Egorov",
+      "name": "Pyroscope",
       "url": "https://pyroscope.io/"
     },
     "keywords": [

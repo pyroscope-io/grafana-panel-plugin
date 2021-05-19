@@ -77,20 +77,16 @@ class FlameGraphRenderer extends React.Component {
         "Reset Flamegraph View"
       );
     }
-
-    this.fetchFlameBearerData(this.props.renderURL)
+    this.updateFlameBearerData()
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.getParamsFromRenderURL(this.props.renderURL).name != this.getParamsFromRenderURL(prevProps.renderURL).name ||
-      prevProps.from != this.props.from ||
-      prevProps.until != this.props.until ||
-      prevProps.maxNodes != this.props.maxNodes ||
-      prevProps.refreshToken != this.props.refreshToken ||
-      prevProps[`${this.props.viewSide}From`] != this.props[`${this.props.viewSide}From`] ||
-      prevProps[`${this.props.viewSide}Until`] != this.props[`${this.props.viewSide}Until`]
-    ) {
-      this.fetchFlameBearerData(this.props.renderURL)
+    const from = this.props.data?.timeRange?.raw.from.valueOf();
+    const until = this.props.data?.timeRange?.raw.to.valueOf();
+    const prevFrom = prevProps.data?.timeRange?.raw.from.valueOf();
+    const prevUntil = prevProps.data?.timeRange?.raw.to.valueOf();
+    if (from !== prevFrom || until !== prevUntil) {
+      this.updateFlameBearerData()
     }
 
     if (
@@ -101,22 +97,13 @@ class FlameGraphRenderer extends React.Component {
     }
   }
 
-  fetchFlameBearerData() {
+  updateFlameBearerData() {
     const flamebearer = this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0];
     deltaDiff(flamebearer.levels);
     this.setState({ ...this.state, flamebearer },
       () => {
         this.updateData();
     })
-  }
-
-  getParamsFromRenderURL(inputURL) {
-    let urlParamsRegexp = /(.*render\?)(?<urlParams>(.*))/
-    let paramsString = inputURL.match(urlParamsRegexp);
-    let params = new URLSearchParams(paramsString.groups.urlParams);
-    let paramsObj = this.paramsToObject(params);
-
-    return paramsObj
   }
 
   paramsToObject(entries) {
@@ -240,7 +227,8 @@ class FlameGraphRenderer extends React.Component {
     // this is here to debounce resize events (see: https://css-tricks.com/debouncing-throttling-explained-examples/)
     //   because rendering is expensive
     clearTimeout(this.resizeFinish);
-    this.pxPerLevel = (el[0].contentRect.height - 60) / this.state.flamebearer.levels.length;
+    const responsiveHeight = (el[0].contentRect.height - 60) / this.state.flamebearer.levels.length;
+    this.pxPerLevel = responsiveHeight > 20 ? 20 : responsiveHeight;
     this.resizeFinish = setTimeout(this.renderCanvas, 50);
   };
 
@@ -464,64 +452,25 @@ class FlameGraphRenderer extends React.Component {
   };
 
   render = () => {
-
-    let flameGraphPane = (
-      <div
-        key={'flamegraph-pane'}
-        className={this.styles.flamegraphPane}
-      >
-        <div className='flamegraph-header'>
-          <span></span>
-          <span>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
-        </div>
-        <canvas
-          height="0"
-          ref={this.canvasRef}
-          onClick={this.clickHandler}
-          onMouseMove={this.mouseMoveHandler}
-          onMouseOut={this.mouseOutHandler}
-        />
-      </div>
-    )
-
-    let panes = [flameGraphPane];
-
-    let instructionsText = this.props.viewType === "double" ? `Select ${this.props.viewSide} time range` : null;
-    let instructionsClassName = this.props.viewType === "double" ? `${this.props.viewSide}-instructions` : null;
-
     return (
       <div>
-
-        <div>
-          {/* <ProfilerHeader
-            view={this.state.view}
-            handleSearchChange={this.handleSearchChange}
-            reset={this.reset}
-            updateView={this.updateView}
-            resetStyle={this.state.resetStyle}
-          /> */}
-          <div className={`${instructionsClassName}-wrapper`}>
-            <span className={`${instructionsClassName}-text`}>{instructionsText}</span>
-          </div>
-          <div className={clsx("flamegraph-container panes-wrapper", { "vertical-orientation": this.props.viewType === "double" })}>
-            {
-              panes.map((pane) => (
-                pane
-              ))
-            }
-            {/* { tablePane }
-            { flameGraphPane } */}
-          </div>
-          {/* <div
-            className={clsx("no-data-message", {
-              visible:
-                this.state.flamebearer && this.state.flamebearer.numTicks === 0,
-            })}
+        <div className={clsx("flamegraph-container panes-wrapper")}>
+          <div
+            key={'flamegraph-pane'}
+            className={this.styles.flamegraphPane}
           >
-            <span>
-              No profiling data available for this application / time range.
-            </span>
-          </div> */}
+            <div className='flamegraph-header'>
+              <span></span>
+              <span>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
+            </div>
+            <canvas
+              height="0"
+              ref={this.canvasRef}
+              onClick={this.clickHandler}
+              onMouseMove={this.mouseMoveHandler}
+              onMouseOut={this.mouseOutHandler}
+            />
+          </div>
         </div>
         <div className="flamegraph-highlight" style={this.state.highlightStyle} />
         <div
