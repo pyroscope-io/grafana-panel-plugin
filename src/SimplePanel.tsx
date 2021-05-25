@@ -8,14 +8,14 @@ import FlameGraphRenderer from 'components/FlameGraphRenderer';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-export const SimplePanel: React.FC<Props> = ({ options, data }) => {
+export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
   const theme = useTheme();
   const styles = getStyles();
   return (
     <>
     <div className={styles.app}>
       <div className={`${styles.appContainer} flamegraph-wrapper`}>
-        <FlameGraphRenderer options={options} data={data} />
+        <FlameGraphRenderer options={options} data={data} width={width} height={height} />
       </div>
     </div>
     </>

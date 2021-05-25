@@ -32,6 +32,11 @@ const getStyles = stylesFactory(() => {
       margin: 0 6px;
       width: 100%;
     `,
+    flamegraphTitle: css`
+      width: 100%;
+      display: block;
+      text-align: center;
+    `,
   };
 });
 
@@ -64,9 +69,9 @@ class FlameGraphRenderer extends React.Component {
     this.rangeMin = 0;
     this.rangeMax = 1;
     this.query = "";
-    const panelContainer = document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
-    const panelContanerResizeObserver = new ResizeObserver(this.resizeHandler);
-    panelContanerResizeObserver.observe(panelContainer);
+    this.panelContainer = document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
+    // const panelContanerResizeObserver = new ResizeObserver(this.resizeHandler);
+    // panelContanerResizeObserver.observe(panelContainer);
     window.addEventListener("focus", this.focusHandler);
 
     if (this.props.shortcut) {
@@ -81,14 +86,17 @@ class FlameGraphRenderer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    const name = this.props.data.series[this.props.data.series.length - 1].name;
     const from = this.props.data?.timeRange?.raw.from.valueOf();
     const until = this.props.data?.timeRange?.raw.to.valueOf();
+    const prevName = prevProps.data.series[prevProps.data.series.length - 1].name;
     const prevFrom = prevProps.data?.timeRange?.raw.from.valueOf();
     const prevUntil = prevProps.data?.timeRange?.raw.to.valueOf();
-    if (from !== prevFrom || until !== prevUntil) {
+    if (from !== prevFrom || until !== prevUntil || name !== prevName) {
       this.updateFlameBearerData()
     }
 
+    this.resizeHandler();
     if (
       this.state.flamebearer &&
       prevState.flamebearer != this.state.flamebearer
@@ -227,7 +235,12 @@ class FlameGraphRenderer extends React.Component {
     // this is here to debounce resize events (see: https://css-tricks.com/debouncing-throttling-explained-examples/)
     //   because rendering is expensive
     clearTimeout(this.resizeFinish);
-    const responsiveHeight = (el[0].contentRect.height - 60) / this.state.flamebearer.levels.length;
+    let responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.state.flamebearer.levels.length;
+    this.levelsToShow = this.state.flamebearer.levels.length;
+    while(responsiveHeight < 14) {
+      this.levelsToShow -=1;
+      responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.levelsToShow;
+    }
     this.pxPerLevel = responsiveHeight > 20 ? 20 : responsiveHeight;
     this.resizeFinish = setTimeout(this.renderCanvas, 50);
   };
@@ -265,8 +278,8 @@ class FlameGraphRenderer extends React.Component {
     this.canvas.height = this.pxPerLevel * (levels.length - this.topLevel);
     this.canvas.style.width='100%';
     this.canvas.style.height='100%';
-    this.canvas.width  = this.canvas.offsetWidth;
-    this.canvas.height = this.canvas.offsetHeight;
+    this.canvas.width  = this.props.width;
+    this.canvas.height = this.props.height;
     if (devicePixelRatio > 1) {
       this.canvas.width *= 2;
       this.canvas.height *= 2;
@@ -279,7 +292,7 @@ class FlameGraphRenderer extends React.Component {
 
     const formatter = this.createFormatter();
     // i = level
-    for (let i = 0; i < levels.length - this.topLevel; i++) {
+    for (let i = 0; i < this.levelsToShow - this.topLevel; i++) {
       const level = levels[this.topLevel + i];
       for (let j = 0; j < level.length; j += 4) {
         // j = 0: x start of bar
@@ -460,8 +473,7 @@ class FlameGraphRenderer extends React.Component {
             className={this.styles.flamegraphPane}
           >
             <div className='flamegraph-header'>
-              <span></span>
-              <span>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
+              <span className={this.styles.flamegraphTitle}>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
             </div>
             <canvas
               height="0"
