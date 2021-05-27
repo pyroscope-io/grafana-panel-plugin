@@ -37,6 +37,13 @@ const getStyles = stylesFactory(() => {
       display: block;
       text-align: center;
     `,
+    errorMessage: css`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
   };
 });
 
@@ -86,32 +93,42 @@ class FlameGraphRenderer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const name = this.props.data.series[this.props.data.series.length - 1].name;
-    const from = this.props.data?.timeRange?.raw.from.valueOf();
-    const until = this.props.data?.timeRange?.raw.to.valueOf();
-    const prevName = prevProps.data.series[prevProps.data.series.length - 1].name;
-    const prevFrom = prevProps.data?.timeRange?.raw.from.valueOf();
-    const prevUntil = prevProps.data?.timeRange?.raw.to.valueOf();
-    if (from !== prevFrom || until !== prevUntil || name !== prevName) {
-      this.updateFlameBearerData()
-    }
+    if(this.props.data.series && this.props.data.series.length) {
+      const name = this.props.data.series[this.props.data.series.length - 1].name;
+      const from = this.props.data?.timeRange?.raw.from.valueOf();
+      const until = this.props.data?.timeRange?.raw.to.valueOf();
+      const prevName = prevProps.data.series[prevProps.data.series.length - 1].name;
+      const prevFrom = prevProps.data?.timeRange?.raw.from.valueOf();
+      const prevUntil = prevProps.data?.timeRange?.raw.to.valueOf();
+      if (from !== prevFrom || until !== prevUntil || name !== prevName) {
+        this.updateFlameBearerData()
+      }
 
-    this.resizeHandler();
-    if (
-      this.state.flamebearer &&
-      prevState.flamebearer != this.state.flamebearer
-    ) {
-      this.updateData();
+      this.resizeHandler();
+      if (
+        this.state.flamebearer &&
+        prevState.flamebearer != this.state.flamebearer
+      ) {
+        this.updateData();
+      }
     }
   }
 
   updateFlameBearerData() {
-    const flamebearer = this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0];
-    deltaDiff(flamebearer.levels);
-    this.setState({ ...this.state, flamebearer },
-      () => {
-        this.updateData();
-    })
+    if(!this.props.data.series || !this.props.data.series.length) {
+      this.setState({...this.state, noData: 'No data received: please check datasource plugin settings or connection to pyroscope instance'});
+    } else if (this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0].names.length <= 1) {
+      this.setState({...this.state, noData: 'No profiling data received'});
+    }
+    else {
+      const flamebearer = this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0];
+      deltaDiff(flamebearer.levels);
+      this.setState({ ...this.state, flamebearer, noData: null },
+        () => {
+          this.updateData();
+          this.forceUpdate();
+      })
+    }
   }
 
   paramsToObject(entries) {
@@ -466,33 +483,40 @@ class FlameGraphRenderer extends React.Component {
 
   render = () => {
     return (
-      <div>
-        <div className={clsx("flamegraph-container panes-wrapper")}>
-          <div
-            key={'flamegraph-pane'}
-            className={this.styles.flamegraphPane}
-          >
-            <div className='flamegraph-header'>
-              <span className={this.styles.flamegraphTitle}>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
-            </div>
-            <canvas
-              height="0"
-              ref={this.canvasRef}
-              onClick={this.clickHandler}
-              onMouseMove={this.mouseMoveHandler}
-              onMouseOut={this.mouseOutHandler}
-            />
-          </div>
+      <>
+        {!this.state.noData ?
+          <div style={{height: '100%'}}>
+            <>
+              <div className={clsx("flamegraph-container panes-wrapper")}>
+                <div
+                  key={'flamegraph-pane'}
+                  className={this.styles.flamegraphPane}
+                >
+                  <div className='flamegraph-header'>
+                    <span className={this.styles.flamegraphTitle}>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
+                  </div>
+                  <canvas
+                    height="0"
+                    ref={this.canvasRef}
+                    onClick={this.clickHandler}
+                    onMouseMove={this.mouseMoveHandler}
+                    onMouseOut={this.mouseOutHandler}
+                  />
+                </div>
+              </div>
+              <div className="flamegraph-highlight" style={this.state.highlightStyle} />
+              <div
+                style={this.state.tooltipStyle}
+                ref={this.tooltipRef}
+              >
+                <div className="flamegraph-tooltip-name">{this.state.tooltipTitle}</div>
+                <div>{this.state.tooltipSubtitle}</div>
+              </div>
+            </>
         </div>
-        <div className="flamegraph-highlight" style={this.state.highlightStyle} />
-        <div
-          style={this.state.tooltipStyle}
-          ref={this.tooltipRef}
-        >
-          <div className="flamegraph-tooltip-name">{this.state.tooltipTitle}</div>
-          <div>{this.state.tooltipSubtitle}</div>
-        </div>
-      </div>
+        : <p className={this.styles.errorMessage}>{this.state.noData}</p>
+        }
+      </>
     )
   }
 };
