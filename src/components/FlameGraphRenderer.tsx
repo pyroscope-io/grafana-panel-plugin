@@ -43,6 +43,8 @@ const getStyles = stylesFactory(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    top: 0;
   `,
   };
 });
@@ -77,8 +79,6 @@ class FlameGraphRenderer extends React.Component {
     this.rangeMax = 1;
     this.query = "";
     this.panelContainer = document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
-    // const panelContanerResizeObserver = new ResizeObserver(this.resizeHandler);
-    // panelContanerResizeObserver.observe(panelContainer);
     window.addEventListener("focus", this.focusHandler);
 
     if (this.props.shortcut) {
@@ -89,7 +89,8 @@ class FlameGraphRenderer extends React.Component {
         "Reset Flamegraph View"
       );
     }
-    this.updateFlameBearerData()
+    this.updateFlameBearerData();
+    this.renderCanvas();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -126,7 +127,7 @@ class FlameGraphRenderer extends React.Component {
       this.setState({ ...this.state, flamebearer, noData: null },
         () => {
           this.updateData();
-          this.forceUpdate();
+          this.renderCanvas();
       })
     }
   }
@@ -252,14 +253,16 @@ class FlameGraphRenderer extends React.Component {
     // this is here to debounce resize events (see: https://css-tricks.com/debouncing-throttling-explained-examples/)
     //   because rendering is expensive
     clearTimeout(this.resizeFinish);
-    let responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.state.flamebearer.levels.length;
-    this.levelsToShow = this.state.flamebearer.levels.length;
-    while(responsiveHeight < 14) {
-      this.levelsToShow -=1;
-      responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.levelsToShow;
+    if (this.state.flamebearer) {
+      let responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.state.flamebearer.levels.length;
+      this.levelsToShow = this.state.flamebearer.levels.length;
+      while(responsiveHeight < 14) {
+        this.levelsToShow -=1;
+        responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.levelsToShow;
+      }
+      this.pxPerLevel = responsiveHeight > 20 ? 20 : responsiveHeight;
+      this.resizeFinish = setTimeout(this.renderCanvas, 50);
     }
-    this.pxPerLevel = responsiveHeight > 20 ? 20 : responsiveHeight;
-    this.resizeFinish = setTimeout(this.renderCanvas, 50);
   };
 
   focusHandler = () => {
@@ -288,13 +291,12 @@ class FlameGraphRenderer extends React.Component {
     }
 
     const { names, levels, numTicks, sampleRate, units } = this.state;
-
     this.graphWidth = this.canvas.offsetWidth;
     this.pxPerTick =
       this.graphWidth / numTicks / (this.rangeMax - this.rangeMin);
     this.canvas.height = this.pxPerLevel * (levels.length - this.topLevel);
     this.canvas.style.width='100%';
-    this.canvas.style.height='100%';
+    this.canvas.style.height='93%';
     this.canvas.width  = this.props.width;
     this.canvas.height = this.props.height;
     if (devicePixelRatio > 1) {
@@ -484,10 +486,9 @@ class FlameGraphRenderer extends React.Component {
   render = () => {
     return (
       <>
-        {!this.state.noData ?
-          <div style={{height: '100%'}}>
+          <div style={{height: '100%', opacity: this.state.noData ? 0 : 1}}>
             <>
-              <div className={clsx("flamegraph-container panes-wrapper")}>
+              <div className={clsx("flamegraph-container panes-wrapper")} style={{height: '100%'}}>
                 <div
                   key={'flamegraph-pane'}
                   className={this.styles.flamegraphPane}
@@ -496,7 +497,6 @@ class FlameGraphRenderer extends React.Component {
                     <span className={this.styles.flamegraphTitle}>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
                   </div>
                   <canvas
-                    height="0"
                     ref={this.canvasRef}
                     onClick={this.clickHandler}
                     onMouseMove={this.mouseMoveHandler}
@@ -514,8 +514,7 @@ class FlameGraphRenderer extends React.Component {
               </div>
             </>
         </div>
-        : <p className={this.styles.errorMessage}>{this.state.noData}</p>
-        }
+        {this.state.noData && <p className={this.styles.errorMessage}>{this.state.noData}</p>}
       </>
     )
   }
