@@ -1,3 +1,7 @@
+* {
+  font-family: 'Roboto';
+}
+
 .flamegraph-tooltip {
   max-width: 80%;
 

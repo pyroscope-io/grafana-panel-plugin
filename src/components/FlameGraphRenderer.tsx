@@ -1,35 +1,27 @@
-// @ts-nocheck
-
-import React from "react";
-import clsx from "clsx";
+//@ts-nocheck
+import React from 'react';
+import clsx from 'clsx';
 import { css } from 'emotion';
 import { stylesFactory } from '@grafana/ui';
 
-import {
-  numberWithCommas,
-  formatPercent,
-  getPackageNameFromStackTrace,
-  getFormatter,
-} from "../util/format";
-import { colorBasedOnPackageName, colorGreyscale } from "../util/color";
-import { deltaDiff } from '../util/flamebearer';
+import { numberWithCommas, formatPercent, getPackageNameFromStackTrace, getFormatter } from '../util/format';
+import { colorBasedOnPackageName, colorGreyscale } from '../util/color';
 
 const COLLAPSE_THRESHOLD = 10;
 const LABEL_THRESHOLD = 10;
-const HIGHLIGHT_NODE_COLOR = "#48CE73"; // green
+const HIGHLIGHT_NODE_COLOR = '#48CE73'; // green
 const GAP = 0.5;
 
 const unitsToFlamegraphTitle = {
-  "objects": "amount of objects in RAM per function",
-  "bytes": "amount of RAM per function",
-  "samples": "CPU time per function",
-}
+  objects: 'amount of objects in RAM per function',
+  bytes: 'amount of RAM per function',
+  samples: 'CPU time per function',
+};
 
 const getStyles = stylesFactory(() => {
   return {
     flamegraphPane: css`
       flex: 1;
-      margin: 0 6px;
       width: 100%;
     `,
     flamegraphTitle: css`
@@ -38,14 +30,14 @@ const getStyles = stylesFactory(() => {
       text-align: center;
     `,
     errorMessage: css`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-  `,
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+    `,
   };
 });
 
@@ -56,12 +48,12 @@ class FlameGraphRenderer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      highlightStyle: { display: "none" },
-      tooltipStyle: { display: "none" },
-      resetStyle: { visibility: "hidden" },
-      sortBy: "self",
-      sortByDirection: "desc",
-      view: "both",
+      highlightStyle: { display: 'none' },
+      tooltipStyle: { display: 'none' },
+      resetStyle: { visibility: 'hidden' },
+      sortBy: 'self',
+      sortByDirection: 'desc',
+      view: 'both',
       flamebearer: null,
     };
     this.canvasRef = React.createRef();
@@ -72,29 +64,24 @@ class FlameGraphRenderer extends React.Component {
 
   componentDidMount() {
     this.canvas = this.canvasRef.current;
-    this.ctx = this.canvas.getContext("2d");
+    this.ctx = this.canvas.getContext('2d');
     this.topLevel = 0; // Todo: could be a constant
     this.selectedLevel = 0;
     this.rangeMin = 0;
     this.rangeMax = 1;
-    this.query = "";
+    this.query = '';
     this.panelContainer = document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
-    window.addEventListener("focus", this.focusHandler);
+    window.addEventListener('focus', this.focusHandler);
 
     if (this.props.shortcut) {
-      this.props.shortcut.registerShortcut(
-        this.reset,
-        ["escape"],
-        "Reset",
-        "Reset Flamegraph View"
-      );
+      this.props.shortcut.registerShortcut(this.reset, ['escape'], 'Reset', 'Reset Flamegraph View');
     }
     this.updateFlameBearerData();
     this.renderCanvas();
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(this.props.data.series && this.props.data.series.length) {
+    if (this.props.data.series && this.props.data.series.length) {
       const name = this.props.data.series[this.props.data.series.length - 1].name;
       const from = this.props.data?.timeRange?.raw.from.valueOf();
       const until = this.props.data?.timeRange?.raw.to.valueOf();
@@ -102,39 +89,37 @@ class FlameGraphRenderer extends React.Component {
       const prevFrom = prevProps.data?.timeRange?.raw.from.valueOf();
       const prevUntil = prevProps.data?.timeRange?.raw.to.valueOf();
       if (from !== prevFrom || until !== prevUntil || name !== prevName) {
-        this.updateFlameBearerData()
+        this.updateFlameBearerData();
       }
 
       this.resizeHandler();
-      if (
-        this.state.flamebearer &&
-        prevState.flamebearer != this.state.flamebearer
-      ) {
+      if (this.state.flamebearer && prevState.flamebearer !== this.state.flamebearer) {
         this.updateData();
       }
     }
   }
 
   updateFlameBearerData() {
-    if(!this.props.data.series || !this.props.data.series.length) {
-      this.setState({...this.state, noData: 'No data received: please check datasource plugin settings or connection to pyroscope instance'});
+    if (!this.props.data.series || !this.props.data.series.length) {
+      this.setState({
+        ...this.state,
+        noData: 'No data received: please check datasource plugin settings or connection to pyroscope instance',
+      });
     } else if (this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0].names.length <= 1) {
-      this.setState({...this.state, noData: 'No profiling data received'});
-    }
-    else {
+      this.setState({ ...this.state, noData: 'No profiling data received' });
+    } else {
       const flamebearer = this.props.data.series[this.props.data.series.length - 1].fields[0].values.buffer[0];
-      deltaDiff(flamebearer.levels);
-      this.setState({ ...this.state, flamebearer, noData: null },
-        () => {
-          this.updateData();
-          this.renderCanvas();
-      })
+      this.setState({ ...this.state, flamebearer, noData: null }, () => {
+        this.updateData();
+        this.renderCanvas();
+      });
     }
   }
 
   paramsToObject(entries) {
-    const result = {}
-    for(const [key, value] of entries) { // each 'entry' is a [key, value] tupple
+    const result = {};
+    for (const [key, value] of entries) {
+      // each 'entry' is a [key, value] tupple
       result[key] = value;
     }
     return result;
@@ -168,8 +153,7 @@ class FlameGraphRenderer extends React.Component {
       this.selectedLevel = i;
       this.topLevel = 0;
       this.rangeMin = this.state.levels[i][j] / this.state.numTicks;
-      this.rangeMax =
-        (this.state.levels[i][j] + this.state.levels[i][j + 1]) / this.state.numTicks;
+      this.rangeMax = (this.state.levels[i][j] + this.state.levels[i][j + 1]) / this.state.numTicks;
     } else {
       this.selectedLevel = 0;
       this.topLevel = 0;
@@ -181,15 +165,18 @@ class FlameGraphRenderer extends React.Component {
 
   updateData = () => {
     const { names, levels, numTicks, sampleRate, units } = this.state.flamebearer;
-    this.setState({
-      names: names,
-      levels: levels,
-      numTicks: numTicks,
-      sampleRate: sampleRate,
-      units: units,
-    }, () => {
-      this.renderCanvas();
-    });
+    this.setState(
+      {
+        names: names,
+        levels: levels,
+        numTicks: numTicks,
+        sampleRate: sampleRate,
+        units: units,
+      },
+      () => {
+        this.renderCanvas();
+      }
+    );
   };
 
   // binary search of a block in a stack level
@@ -216,11 +203,11 @@ class FlameGraphRenderer extends React.Component {
     // const emptyQuery = this.query === "";
     const topLevelSelected = this.selectedLevel === 0;
     this.setState({
-      resetStyle: { visibility: topLevelSelected ? "hidden" : "visible" },
+      resetStyle: { visibility: topLevelSelected ? 'hidden' : 'visible' },
     });
   };
 
-  handleSearchChange = (e) => {
+  handleSearchChange = e => {
     this.query = e.target.value;
     this.updateResetStyle();
     this.renderCanvas();
@@ -240,24 +227,27 @@ class FlameGraphRenderer extends React.Component {
     return { i: 0, j: 0 };
   };
 
-  clickHandler = (e) => {
+  clickHandler = e => {
     const { i, j } = this.xyToBar(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-    if (j === -1) return;
+    if (j === -1) {
+      return;
+    }
 
     this.updateZoom(i, j);
     this.renderCanvas();
     this.mouseOutHandler();
   };
 
-  resizeHandler = (el) => {
+  resizeHandler = el => {
     // this is here to debounce resize events (see: https://css-tricks.com/debouncing-throttling-explained-examples/)
     //   because rendering is expensive
     clearTimeout(this.resizeFinish);
     if (this.state.flamebearer) {
-      let responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.state.flamebearer.levels.length;
+      let responsiveHeight =
+        (this.panelContainer.getClientRects()[0].height - 60) / this.state.flamebearer.levels.length;
       this.levelsToShow = this.state.flamebearer.levels.length;
-      while(responsiveHeight < 14) {
-        this.levelsToShow -=1;
+      while (responsiveHeight < 14) {
+        this.levelsToShow -= 1;
         responsiveHeight = (this.panelContainer.getClientRects()[0].height - 60) / this.levelsToShow;
       }
       this.pxPerLevel = responsiveHeight > 20 ? 20 : responsiveHeight;
@@ -269,12 +259,12 @@ class FlameGraphRenderer extends React.Component {
     this.renderCanvas();
   };
 
-  tickToX = (i) => {
+  tickToX = i => {
     const pos = (i - this.state.numTicks * this.rangeMin) * this.pxPerTick;
     return pos;
   };
 
-  updateView = (newView) => {
+  updateView = newView => {
     this.setState({
       view: newView,
     });
@@ -283,7 +273,7 @@ class FlameGraphRenderer extends React.Component {
 
   createFormatter = () => {
     return getFormatter(this.state.numTicks, this.state.sampleRate, this.state.units);
-  }
+  };
 
   renderCanvas = () => {
     if (!this.state.names) {
@@ -292,12 +282,11 @@ class FlameGraphRenderer extends React.Component {
 
     const { names, levels, numTicks, sampleRate, units } = this.state;
     this.graphWidth = this.canvas.offsetWidth;
-    this.pxPerTick =
-      this.graphWidth / numTicks / (this.rangeMax - this.rangeMin);
+    this.pxPerTick = this.graphWidth / numTicks / (this.rangeMax - this.rangeMin);
     this.canvas.height = this.pxPerLevel * (levels.length - this.topLevel);
-    this.canvas.style.width='100%';
-    this.canvas.style.height='93%';
-    this.canvas.width  = this.props.width;
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = '93%';
+    this.canvas.width = this.props.width;
     this.canvas.height = this.props.height;
     if (devicePixelRatio > 1) {
       this.canvas.width *= 2;
@@ -305,7 +294,7 @@ class FlameGraphRenderer extends React.Component {
       this.ctx.scale(2, 2);
     }
 
-    this.ctx.textBaseline = "middle";
+    this.ctx.textBaseline = 'middle';
     this.ctx.font =
       '400 11px system-ui, -apple-system, "Segoe UI", "Roboto", "Ubuntu", "Cantarell", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 
@@ -325,8 +314,7 @@ class FlameGraphRenderer extends React.Component {
 
         // For this particular bar, there is a match
         const queryExists = this.query.length > 0;
-        const nodeIsInQuery =
-          (this.query && names[level[j + 3]].indexOf(this.query) >= 0) || false;
+        const nodeIsInQuery = (this.query && names[level[j + 3]].indexOf(this.query) >= 0) || false;
         // merge very small blocks into big "collapsed" ones for performance
         const collapsed = numBarTicks * this.pxPerTick <= COLLAPSE_THRESHOLD;
 
@@ -336,9 +324,7 @@ class FlameGraphRenderer extends React.Component {
             j < level.length - 3 &&
             barIndex + numBarTicks === level[j + 3] &&
             level[j + 4] * this.pxPerTick <= COLLAPSE_THRESHOLD &&
-            nodeIsInQuery ===
-              ((this.query && names[level[j + 5]].indexOf(this.query) >= 0) ||
-                false)
+            nodeIsInQuery === ((this.query && names[level[j + 5]].indexOf(this.query) >= 0) || false)
           ) {
             j += 4;
             numBarTicks += level[j + 1];
@@ -367,10 +353,7 @@ class FlameGraphRenderer extends React.Component {
         } else if (queryExists && !nodeIsInQuery) {
           nodeColor = colorGreyscale(200, 0.66);
         } else {
-          nodeColor = colorBasedOnPackageName(
-            getPackageNameFromStackTrace(spyName, names[level[j + 3]]),
-            a
-          );
+          nodeColor = colorBasedOnPackageName(getPackageNameFromStackTrace(spyName, names[level[j + 3]]), a);
         }
 
         this.ctx.fillStyle = nodeColor;
@@ -382,7 +365,7 @@ class FlameGraphRenderer extends React.Component {
 
           this.ctx.save();
           this.ctx.clip();
-          this.ctx.fillStyle = "black";
+          this.ctx.fillStyle = 'black';
           this.ctx.fillText(name, Math.round(Math.max(x, 0) + 3), y + sh / 2);
           this.ctx.restore();
         }
@@ -390,27 +373,20 @@ class FlameGraphRenderer extends React.Component {
     }
   };
 
-  mouseMoveHandler = (e) => {
+  mouseMoveHandler = e => {
     const { i, j } = this.xyToBar(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
 
-    if (
-      j === -1 ||
-      e.nativeEvent.offsetX < 0 ||
-      e.nativeEvent.offsetX > this.graphWidth
-    ) {
+    if (j === -1 || e.nativeEvent.offsetX < 0 || e.nativeEvent.offsetX > this.graphWidth) {
       this.mouseOutHandler();
       return;
     }
 
-    this.canvas.style.cursor = "pointer";
+    this.canvas.style.cursor = 'pointer';
 
     const level = this.state.levels[i];
     const x = Math.max(this.tickToX(level[j]), 0);
     const y = (i - this.topLevel) * this.pxPerLevel;
-    const sw = Math.min(
-      this.tickToX(level[j] + level[j + 1]) - x,
-      this.graphWidth
-    );
+    const sw = Math.min(this.tickToX(level[j] + level[j + 1]) - x, this.graphWidth);
 
     const tooltipEl = this.tooltipRef.current;
     const numBarTicks = level[j + 1];
@@ -425,7 +401,7 @@ class FlameGraphRenderer extends React.Component {
 
     this.setState({
       highlightStyle: {
-        display: "block",
+        display: 'block',
         left: `${this.canvas.offsetLeft + x}px`,
         top: `${this.canvas.offsetTop + y}px`,
         width: `${sw}px`,
@@ -442,40 +418,39 @@ class FlameGraphRenderer extends React.Component {
         padding: '3px 5px',
         color: '#333',
         fontSize: '12px',
-        display: "block",
-        left: `${
-          Math.min(
-            this.canvas.offsetLeft + e.nativeEvent.offsetX + 15 + tooltipWidth,
-            this.canvas.offsetLeft + this.graphWidth
-          ) - tooltipWidth
-        }px`,
+        display: 'block',
+        left: `${Math.min(
+          this.canvas.offsetLeft + e.nativeEvent.offsetX + 15 + tooltipWidth,
+          this.canvas.offsetLeft + this.graphWidth
+        ) - tooltipWidth}px`,
         top: `${this.canvas.offsetTop + e.nativeEvent.offsetY + 12}px`,
       },
       tooltipTitle,
-      tooltipSubtitle: `${percent}, ${numberWithCommas(
-        numBarTicks
-      )} samples, ${formatter.format(numBarTicks, this.state.sampleRate)}`,
+      tooltipSubtitle: `${percent}, ${numberWithCommas(numBarTicks)} samples, ${formatter.format(
+        numBarTicks,
+        this.state.sampleRate
+      )}`,
     });
   };
 
   mouseOutHandler = () => {
-    this.canvas.style.cursor = "";
+    this.canvas.style.cursor = '';
     this.setState({
       highlightStyle: {
-        display: "none",
+        display: 'none',
       },
       tooltipStyle: {
-        display: "none",
+        display: 'none',
       },
     });
   };
 
-  updateSortBy = (newSortBy) => {
+  updateSortBy = newSortBy => {
     let dir = this.state.sortByDirection;
-    if (this.state.sortBy == newSortBy) {
-      dir = dir == "asc" ? "desc" : "asc";
+    if (this.state.sortBy === newSortBy) {
+      dir = dir === 'asc' ? 'desc' : 'asc';
     } else {
-      dir = "desc";
+      dir = 'desc';
     }
     this.setState({
       sortBy: newSortBy,
@@ -486,38 +461,34 @@ class FlameGraphRenderer extends React.Component {
   render = () => {
     return (
       <>
-          <div style={{height: '100%', opacity: this.state.noData ? 0 : 1}}>
-            <>
-              <div className={clsx("flamegraph-container panes-wrapper")} style={{height: '100%'}}>
-                <div
-                  key={'flamegraph-pane'}
-                  className={this.styles.flamegraphPane}
-                >
-                  <div className='flamegraph-header'>
-                    <span className={this.styles.flamegraphTitle}>Frame width represents {unitsToFlamegraphTitle[this.state.units]}</span>
-                  </div>
-                  <canvas
-                    ref={this.canvasRef}
-                    onClick={this.clickHandler}
-                    onMouseMove={this.mouseMoveHandler}
-                    onMouseOut={this.mouseOutHandler}
-                  />
+        <div style={{ height: '100%', opacity: this.state.noData ? 0 : 1 }}>
+          <>
+            <div className={clsx('flamegraph-container panes-wrapper')} style={{ height: '100%' }}>
+              <div key={'flamegraph-pane'} className={this.styles.flamegraphPane}>
+                <div className="flamegraph-header">
+                  <span className={this.styles.flamegraphTitle}>
+                    Frame width represents {unitsToFlamegraphTitle[this.state.units]}
+                  </span>
                 </div>
+                <canvas
+                  ref={this.canvasRef}
+                  onClick={this.clickHandler}
+                  onMouseMove={this.mouseMoveHandler}
+                  onMouseOut={this.mouseOutHandler}
+                />
               </div>
-              <div className="flamegraph-highlight" style={this.state.highlightStyle} />
-              <div
-                style={this.state.tooltipStyle}
-                ref={this.tooltipRef}
-              >
-                <div className="flamegraph-tooltip-name">{this.state.tooltipTitle}</div>
-                <div>{this.state.tooltipSubtitle}</div>
-              </div>
-            </>
+            </div>
+            <div className="flamegraph-highlight" style={this.state.highlightStyle} />
+            <div style={this.state.tooltipStyle} ref={this.tooltipRef}>
+              <div className="flamegraph-tooltip-name">{this.state.tooltipTitle}</div>
+              <div>{this.state.tooltipSubtitle}</div>
+            </div>
+          </>
         </div>
         {this.state.noData && <p className={this.styles.errorMessage}>{this.state.noData}</p>}
       </>
-    )
-  }
-};
+    );
+  };
+}
 
 export default FlameGraphRenderer;

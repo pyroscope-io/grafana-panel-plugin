@@ -13,11 +13,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const styles = getStyles();
   return (
     <>
-    <div className={styles.app}>
-      <div className={`${styles.appContainer} flamegraph-wrapper`}>
-        <FlameGraphRenderer options={options} data={data} width={width} height={height} />
+      <div className={styles.app}>
+        <div className={`${styles.appContainer} flamegraph-wrapper`}>
+          <FlameGraphRenderer options={options} data={data} width={width} height={height} />
+        </div>
       </div>
-    </div>
     </>
   );
 };
