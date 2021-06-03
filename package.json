@@ -1,6 +1,6 @@
 {
   "name": "pyroscope-pyroscope-grafana",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Pyroscope plugin for grafana",
   "scripts": {
     "build": "grafana-toolkit plugin:build",
