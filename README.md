@@ -2,36 +2,19 @@
 
 ## Getting started
 
-1. Create `grafana-plugins` folder
-2. Open grafana config:
-   * MacOS: `vim /usr/local/etc/grafana/grafana.ini`
-   * Linux: `vim /etc/grafana/grafana.ini`
-3. Specify path to your `grafana-plugins` folder:
-   ```
-   # Directory where grafana will automatically scan and look for plugins
-   plugins = /<path_to>/grafana-plugins
-   ```
-   *Don't forget to remove semicolon at the beginning*
-
-4. Clone [pyroscope-panel-plugin](https://github.com/pyroscope-io/grafana-panel-plugin) and [pyroscope-datasource-plugin](https://github.com/pyroscope-io/grafana-datasource-plugin) into `grafana-plugins` folder
-
-5. Visit each plugin folder and build them:
-   ```
-   yarn install
-   yarn dev
-   ```
-6. Restart Grafana:
-   * MacOS Homebrew: `brew services restart grafana`
-   * Linux: `systemctl restart grafana-server`
-7. Open Grafana ang go to **Configuratin -> Plugins**
-8. Check that plugins are available:
+1. Get the zip file from the Github [releases page](https://github.com/pyroscope-io/grafana-panel-plugin/tags) on panel plugin repo.
+2. Get the zip file from the Github [releases page](https://github.com/pyroscope-io/grafana-datasource-plugin/tags) on datasource plugin repo.
+3. Extract zip files into the plugins directory for Grafana.
+4. Restart Grafana
+5. Open Grafana ang go to **Configuratin -> Plugins**
+6. Check that plugins are available:
    ![plugins-list](https://raw.githubusercontent.com/pyroscope-io/grafana-panel-plugin/main/docs/assets/pluginslist.jpg)
-9. Set up data source plugin:
+7. Set up data source plugin:
    * **Configuration -> Data Sources -> Add data source**
    * click on `pyroscope-datasource`
    * Specify Pyroscope host in `Endpoint` field:
       ![endpoint](https://raw.githubusercontent.com/pyroscope-io/grafana-panel-plugin/main/docs/assets/endpoint.jpg)
-10. Set up panel plugin:
+8. Set up panel plugin:
     * Add an empty panel on your dashboard
     * Select `pyroscop-panel` from Visualization list
     * Under panel view in Query tab select `pyroscope-datasource`
