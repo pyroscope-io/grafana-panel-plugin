@@ -299,9 +299,8 @@ class FlameGraphRenderer extends React.Component {
       '400 11px system-ui, -apple-system, "Segoe UI", "Roboto", "Ubuntu", "Cantarell", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 
     const formatter = this.createFormatter();
-    // i = level
     for (let i = 0; i < this.levelsToShow - this.topLevel; i++) {
-      const level = levels[this.topLevel + i];
+      const level = levels[this.topLevel + i] || [];
       for (let j = 0; j < level.length; j += 4) {
         // j = 0: x start of bar
         // j = 1: width of bar
