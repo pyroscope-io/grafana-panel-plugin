@@ -70,7 +70,9 @@ class FlameGraphRenderer extends React.Component {
     this.rangeMin = 0;
     this.rangeMax = 1;
     this.query = '';
-    this.panelContainer = document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
+    this.panelContainer =
+      document.querySelector('.flamegraph-wrapper')?.closest('.panel-container') ||
+      document.querySelector('.flamegraph-wrapper')?.closest('.panel-wrapper');
     window.addEventListener('focus', this.focusHandler);
 
     if (this.props.shortcut) {
@@ -81,13 +83,15 @@ class FlameGraphRenderer extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.data.series && this.props.data.series.length) {
-      const name = this.props.data.series[this.props.data.series.length - 1].name;
-      const from = this.props.data?.timeRange?.raw.from.valueOf();
-      const until = this.props.data?.timeRange?.raw.to.valueOf();
-      const prevName = prevProps.data.series[prevProps.data.series.length - 1].name;
-      const prevFrom = prevProps.data?.timeRange?.raw.from.valueOf();
-      const prevUntil = prevProps.data?.timeRange?.raw.to.valueOf();
+    const prevData = prevProps.data ? prevProps.data : prevProps;
+    const currentData = this.props.data ? this.props.data : this.props;
+    if (currentData.series && currentData.series.length) {
+      const name = currentData.series[currentData.series.length - 1].name;
+      const from = currentData?.timeRange?.raw.from.valueOf();
+      const until = currentData?.timeRange?.raw.to.valueOf();
+      const prevName = prevData.series[prevData.series.length - 1].name;
+      const prevFrom = prevData?.timeRange?.raw.from.valueOf();
+      const prevUntil = prevData?.timeRange?.raw.to.valueOf();
       if (from !== prevFrom || until !== prevUntil || name !== prevName) {
         this.updateFlameBearerData();
       }
