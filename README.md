@@ -1,5 +1,7 @@
 # Pyroscope Grafana Panel Plugin
 
+**Important: Grafana version 7.2 or later required**
+
 ## Getting started
 
 1. Install the plugin (Installation tab)
@@ -13,7 +15,7 @@
       ![endpoint](https://raw.githubusercontent.com/pyroscope-io/grafana-panel-plugin/main/docs/assets/endpoint.jpg)
 6. Set up panel plugin:
     * Add an empty panel on your dashboard
-    * Select `pyroscop-panel` from Visualization list
+    * Select `pyroscope-panel` from Visualization list
     * Under panel view in Query tab select `pyroscope-datasource`
     * In `Application name` input specify app name
     * Click `Apply`
