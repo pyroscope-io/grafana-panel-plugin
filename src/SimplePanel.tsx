@@ -4,7 +4,7 @@ import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import { css } from 'emotion';
 import { stylesFactory, useTheme } from '@grafana/ui';
-import FlameGraphRenderer from 'components/FlameGraphRenderer';
+import FlameGraph, { parseFlamebearerFormat } from '@pyroscope/flame-graph';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -15,7 +15,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     <>
       <div className={styles.app}>
         <div className={`${styles.appContainer} flamegraph-wrapper`}>
-          <FlameGraphRenderer options={options} data={data} width={width} height={height} />
+          <FlameGraph flamebearer={data.series[data.series.length - 1].fields[0].values.buffer[0]} format={parseFlamebearerFormat()} width={width} height={height} />
         </div>
       </div>
     </>
@@ -32,6 +32,7 @@ const getStyles = stylesFactory(() => {
     `,
     appContainer: css`
       flex: 1 0 auto;
+      position: relative;
     `,
   };
 });
