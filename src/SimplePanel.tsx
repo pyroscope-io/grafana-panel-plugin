@@ -15,7 +15,12 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     <>
       <div className={styles.app}>
         <div className={`${styles.appContainer} flamegraph-wrapper`}>
-          <FlameGraph flamebearer={data.series[data.series.length - 1].fields[0].values.buffer[0]} format={parseFlamebearerFormat()} width={width} height={height} />
+          <FlameGraph
+            flamebearer={data.series[data.series.length - 1].fields[0].values.buffer[0]}
+            format={parseFlamebearerFormat()}
+            width={width}
+            height={height}
+          />
         </div>
       </div>
     </>
