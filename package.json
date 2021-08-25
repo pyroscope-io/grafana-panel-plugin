@@ -22,6 +22,6 @@
     "node": ">=14"
   },
   "dependencies": {
-    "@pyroscope/flame-graph": "pyroscope-io/flame-graph"
+    "pyroscope": "git+ssh://git@github.com:pyroscope-io/pyroscope.git#17d366b8426e437a9e547e4dfc8c2c24f206d99f"
   }
 }
