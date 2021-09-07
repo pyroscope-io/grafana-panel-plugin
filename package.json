@@ -3,11 +3,12 @@
   "version": "1.0.1",
   "description": "Pyroscope plugin for grafana",
   "scripts": {
-    "build": "grafana-toolkit plugin:build",
-    "test": "grafana-toolkit plugin:test",
-    "dev": "grafana-toolkit plugin:dev",
-    "watch": "grafana-toolkit plugin:dev --watch",
-    "sign": "grafana-toolkit plugin:sign",
+    "build-flamegraph": "cd node_modules/pyroscope && yarn && make build-panel && cp webapp/public/assets/flamegraphComponent.js ../../src/flamegraphComponent.js",
+    "build": "yarn build-flamegraph && grafana-toolkit plugin:build",
+    "test": "yarn build-flamegraph && grafana-toolkit plugin:test",
+    "dev": "yarn build-flamegraph && grafana-toolkit plugin:dev",
+    "watch": "yarn build-flamegraph && grafana-toolkit plugin:dev --watch",
+    "sign": "yarn build-flamegraph && grafana-toolkit plugin:sign",
     "start": "yarn watch"
   },
   "author": "Mike Egorov",
@@ -22,6 +23,6 @@
     "node": ">=14"
   },
   "dependencies": {
-    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#6ddde73dc3bb0744f3b3fa65ddc1562f05105c75"
+    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#3a526d0242934b1c303918a7988bf0eb9b2e5768"
   }
 }
