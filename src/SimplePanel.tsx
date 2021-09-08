@@ -34,6 +34,9 @@ const getStyles = stylesFactory(() => {
       min-height: 100%;
       display: flex;
       flex-direction: column;
+      .flamegraph-tooltip {
+        position: fixed;
+      }
     `,
     appContainer: css`
       flex: 1 0 auto;

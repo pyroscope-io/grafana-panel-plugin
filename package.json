@@ -23,6 +23,6 @@
     "node": ">=14"
   },
   "dependencies": {
-    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#3a526d0242934b1c303918a7988bf0eb9b2e5768"
+    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#709bb8b"
   }
 }
