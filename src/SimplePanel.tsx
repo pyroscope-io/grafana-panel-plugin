@@ -4,7 +4,7 @@ import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import { css } from 'emotion';
 import { stylesFactory, useTheme } from '@grafana/ui';
-import FlameGraph, { parseFlamebearerFormat } from 'pyroscope';
+import FlameGraph, { parseFlamebearerFormat } from 'flamegraphComponent.js';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
