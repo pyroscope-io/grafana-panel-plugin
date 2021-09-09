@@ -6,7 +6,6 @@
     "baseUrl": "./src",
     "noImplicitAny": false,
     "noUnusedLocals": false,
-    "allowJs": true,
     "typeRoots": ["./node_modules/@types"]
   }
 }

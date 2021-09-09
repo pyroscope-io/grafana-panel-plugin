@@ -11303,9 +11303,9 @@ puppeteer-core@1.18.1:
     rimraf "^2.6.1"
     ws "^6.1.0"
 
-"pyroscope@git+https://github.com/pyroscope-io/pyroscope.git#709bb8b":
+"pyroscope@git+https://github.com/pyroscope-io/pyroscope.git#133b35b":
   version "0.0.39"
-  resolved "git+https://github.com/pyroscope-io/pyroscope.git#709bb8b4d8950864358bbff14a5194dc395335c3"
+  resolved "git+https://github.com/pyroscope-io/pyroscope.git#133b35bd4256b9708e40b41e49965492f42e0e79"
   dependencies:
     "@babel/preset-env" "^7.10.4"
     "@fortawesome/fontawesome-free" "^5.14.0"
