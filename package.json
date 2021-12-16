@@ -23,6 +23,6 @@
     "node": ">=14"
   },
   "dependencies": {
-    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#chore/grafana-panel-webpack"
+    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#e744a46"
   }
 }

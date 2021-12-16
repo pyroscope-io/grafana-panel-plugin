@@ -11768,9 +11768,9 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-"pyroscope@git+https://github.com/pyroscope-io/pyroscope.git#chore/grafana-panel-webpack":
+"pyroscope@git+https://github.com/pyroscope-io/pyroscope.git#e744a46":
   version "0.4.1"
-  resolved "git+https://github.com/pyroscope-io/pyroscope.git#e93b1c45db142ff2d41b22fa392ea26c17100419"
+  resolved "git+https://github.com/pyroscope-io/pyroscope.git#e744a46b9483dddb0cf5ffeb67295d8103b31f87"
   dependencies:
     "@babel/plugin-transform-runtime" "^7.16.4"
     "@babel/preset-env" "^7.10.4"
