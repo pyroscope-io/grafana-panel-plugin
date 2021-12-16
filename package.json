@@ -3,8 +3,8 @@
   "version": "1.0.1",
   "description": "Pyroscope plugin for grafana",
   "scripts": {
-    "build-flamegraph": "rm ../../src/flamegraphComponent.js ; cd node_modules/pyroscope && pwd && yarn && make build-panel && cp webapp/public/assets/flamegraphComponent.js ../../src/flamegraphComponent.js",
-    "build": "yarn build-flamegraph && grafana-toolkit plugin:build",
+    "build-flamegraph": "cd node_modules/pyroscope && pwd && yarn && make build-panel && cd ../../ && cp node_modules/pyroscope/webapp/public/assets/flamegraphComponent.js src/flamegraphComponent.js",
+    "build": "./build-panel.sh",
     "test": "yarn build-flamegraph && grafana-toolkit plugin:test",
     "dev": "yarn build-flamegraph && grafana-toolkit plugin:dev",
     "watch": "yarn build-flamegraph && grafana-toolkit plugin:dev --watch",
@@ -23,6 +23,6 @@
     "node": ">=14"
   },
   "dependencies": {
-    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#133b35b"
+    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#chore/grafana-panel-webpack"
   }
 }
