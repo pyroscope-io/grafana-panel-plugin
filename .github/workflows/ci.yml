@@ -42,6 +42,10 @@ jobs:
 
       - name: clean cache
         run: yarn cache clean
+      - name: clean cache 2
+        run: rm -Rf /home/runner/.cache/yarn
+      - name: cache list
+        run: yarn cache list
       - name: Install dependencies
         run: yarn install --frozen-lockfile --network-timeout 1000000
 
