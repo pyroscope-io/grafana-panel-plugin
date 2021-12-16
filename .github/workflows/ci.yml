@@ -40,6 +40,8 @@ jobs:
             #          restore-keys: |
             #            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
+      - name: clean cache
+        run: yarn cache clean
       - name: Install dependencies
         run: yarn install --frozen-lockfile --network-timeout 1000000
 
