@@ -47,7 +47,7 @@ jobs:
       - name: cache list
         run: yarn cache list
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --network-timeout 1000000
+        run: yarn install --frozen-lockfile --network-timeout 1000000 --verbose --network-concurrency 1
 
       - name: Build and test frontend
         run: yarn build
