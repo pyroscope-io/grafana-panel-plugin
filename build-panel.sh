@@ -7,8 +7,13 @@ set -euo pipefail
 ################
 rm -Rf dist/
 
+# https://github.com/typicode/husky/issues/851
+# 'husky install' fails since there's no git
+sed -i '/"prepare"/d' node_modules/pyroscope/package.json
+
 # install dependencies
 yarn --cwd node_modules/pyroscope
+
 
 # build panel
 yarn --cwd node_modules/pyroscope build:panel
