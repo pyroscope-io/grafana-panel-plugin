@@ -11770,7 +11770,7 @@ punycode@^2.1.0, punycode@^2.1.1:
 
 "pyroscope@git+https://github.com/pyroscope-io/pyroscope.git#chore/grafana-panel-webpack":
   version "0.4.1"
-  resolved "git+https://github.com/pyroscope-io/pyroscope.git#2e26a1d6537bb93a99a4ffda6a2371cfeb98e431"
+  resolved "git+https://github.com/pyroscope-io/pyroscope.git#e93b1c45db142ff2d41b22fa392ea26c17100419"
   dependencies:
     "@babel/plugin-transform-runtime" "^7.16.4"
     "@babel/preset-env" "^7.10.4"
