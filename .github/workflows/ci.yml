@@ -41,7 +41,7 @@ jobs:
             #            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --network-timeout 1000000
 
       - name: Build and test frontend
         run: yarn build
