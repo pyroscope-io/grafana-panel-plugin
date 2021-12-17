@@ -5,6 +5,7 @@ or [pyroscope/grafana-plugin/panel at main · pyroscope-io/pyroscope](https://gi
 
 
 # Releasing new versions
-1. Update CHANGELOG.md
-2. Bump the version in `package.json`
-3. Merge to the main branch.
+1. Update the `UPSTREAM_BRANCH` in `build-panel.sh`
+2. Update CHANGELOG.md
+3. Bump the version in `package.json`
+4. Merge to the main branch.

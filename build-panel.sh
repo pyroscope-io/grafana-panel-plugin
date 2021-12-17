@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+# TODO update this
 UPSTREAM_BRANCH="chore/grafana-panel-webpack"
 PACKAGE_VERSION=$(cat package.json \
   | grep version \
