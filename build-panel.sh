@@ -10,7 +10,7 @@ cloneDst="pyroscope"
 rm -Rf dist/
 rm -Rf "$cloneDst"
 
-git clone --depth 1 --branch "chore/grafana-panel-webpack" git@github.com:pyroscope-io/pyroscope.git "$cloneDst"
+git clone --depth 1 --branch "chore/grafana-panel-webpack" https://github.com/pyroscope-io/pyroscope.git "$cloneDst"
 
 
 # https://github.com/typicode/husky/issues/851
