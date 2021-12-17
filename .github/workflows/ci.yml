@@ -51,4 +51,23 @@ jobs:
         run: docker-compose -f pyroscope/grafana-plugin/panel/docker-compose.yml up -d
       - name: Run tests
         run: yarn --cwd pyroscope cy:panel:ci
+        env:
+          CYPRESS_VIDEO: true
+          CYPRESS_COMPARE_SNAPSHOTS: true
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: pyroscope/cypress/screenshots
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: pyroscope/cypress/videos
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-snapshots
+          path: pyroscope/cypress/snapshots
+          
 
