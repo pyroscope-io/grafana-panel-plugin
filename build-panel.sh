@@ -9,7 +9,6 @@ PACKAGE_VERSION=$(cat package.json \
   | awk -F: '{ print $2 }' \
   | sed 's/[",]//g')
 
-
 cloneDst="pyroscope"
 
 ################
@@ -30,7 +29,7 @@ yarn --cwd "$cloneDst"
 
 
 # build panel
-PYROSCOPE_PANEL_VERSION="$PACKAGE_VERSION"
+export PYROSCOPE_PANEL_VERSION="$PACKAGE_VERSION"
 yarn --cwd "$cloneDst" build:panel
 
 cp -r "$cloneDst/grafana-plugin/panel/dist" dist

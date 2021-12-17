@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*.*.*" # Run workflow on version tags, e.g. v1.0.0.
+    branches:
+    - main
 
 jobs:
   release:
@@ -15,12 +15,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.1.2
         with:
-          node-version: "14.x"
-
-      - name: Setup Go environment
-        uses: actions/setup-go@v2
-        with:
-          go-version: "1.15"
+          node-version: "14.17"
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -44,36 +39,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile;
-        if: |
-          steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
-          steps.cache-node-modules.outputs.cache-hit != 'true'
-
-      - name: Build and test frontend
+      - name: Build plugin
         run: yarn build
-
-      - name: Check for backend
-        id: check-for-backend
-        run: |
-          if [ -f "Magefile.go" ]
-          then
-            echo "::set-output name=has-backend::true"
-          fi
-
-      - name: Test backend
-        if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: magefile/mage-action@v1
-        with:
-          version: latest
-          args: coverage
-
-      - name: Build backend
-        if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: magefile/mage-action@v1
-        with:
-          version: latest
-          args: buildAll
 
       - name: Sign plugin
         run: yarn sign
