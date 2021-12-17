@@ -40,15 +40,16 @@ jobs:
             #           restore-keys: |
             #             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
             #
-      - name: clean cache
-        run: yarn cache clean
-      - name: clean cache 2
-        run: rm -Rf /home/runner/.cache/yarn
-      - name: cache list
-        run: yarn cache list
-      - run: yarn --version
-      - name: Install dependencies
-        run: yarn install --network-concurrency=1
+            #      - name: clean cache
+            #        run: yarn cache clean
+            #      - name: clean cache 2
+            #        run: rm -Rf /home/runner/.cache/yarn
+            #      - name: cache list
+            #        run: yarn cache list
+            #      - run: yarn --version
+            #      - name: Install dependencies
+            #        # the reason we don't use a lockfile is that we always want the latest commit from pyroscope-io/pyroscope
+            #        run: yarn install --network-concurrency=1 --no-lockfile
 
       - name: Build and test frontend
         run: yarn build

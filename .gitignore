@@ -31,3 +31,4 @@ e2e-results/
 .idea
 
 src/flamegraphComponent.js
+pyroscope

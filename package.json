@@ -15,8 +15,5 @@
   "license": "Apache-2.0",
   "engines": {
     "node": ">=14.17.0"
-  },
-  "dependencies": {
-    "pyroscope": "git+https://github.com/pyroscope-io/pyroscope.git#e744a46"
   }
 }

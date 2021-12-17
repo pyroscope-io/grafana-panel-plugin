@@ -2,23 +2,29 @@
 
 set -euo pipefail
 
+cloneDst="pyroscope"
+
 ################
 # Build Plugin #
 ################
 rm -Rf dist/
+rm -Rf "$cloneDst"
+
+git clone --depth 1 --branch "chore/grafana-panel-webpack" git@github.com:pyroscope-io/pyroscope.git "$cloneDst"
+
 
 # https://github.com/typicode/husky/issues/851
 # 'husky install' fails since there's no git
-sed -i '/"prepare"/d' node_modules/pyroscope/package.json
+sed -i '/"prepare"/d' "$cloneDst/package.json"
 
 # install dependencies
-yarn --cwd node_modules/pyroscope
+yarn --cwd "$cloneDst"
 
 
 # build panel
-yarn --cwd node_modules/pyroscope build:panel
+yarn --cwd "$cloneDst" build:panel
 
-cp -r node_modules/pyroscope/grafana-plugin/panel/dist dist/
+cp -r "$cloneDst/grafana-plugin/panel/dist" dist/
 
 ################
 # Add metadata #
