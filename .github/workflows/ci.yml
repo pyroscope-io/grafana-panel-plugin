@@ -42,6 +42,8 @@ jobs:
 
       - name: Build plugin
         run: yarn build
+        env:
+          PYROSCOPE_PANEL_VERSION: test
 
 
       # We reuse the same tests from the other repo, after all, why not?

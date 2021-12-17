@@ -30,6 +30,3 @@ cp -r "$cloneDst/grafana-plugin/panel/dist" dist
 # Add metadata #
 ################
 cp CHANGELOG.md dist/
-cp README.md dist/
-cp LICENSE dist/
-cp -R img dist/
