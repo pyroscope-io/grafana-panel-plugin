@@ -46,6 +46,8 @@ jobs:
         run: rm -Rf /home/runner/.cache/yarn
       - name: cache list
         run: yarn cache list
+      - run: curl -v https://registry.yarnpkg.com/babel-plugin-polyfill-corejs3/-/babel-plugin-polyfill-corejs3-0.4.0.tgz
+      - run: yarn --version
       - name: Install dependencies
         run: yarn install --no-lockfile
 
