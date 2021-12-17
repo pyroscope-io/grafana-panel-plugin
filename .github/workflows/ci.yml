@@ -18,38 +18,37 @@ jobs:
         with:
           node-version: "14.17"
 
-            #       - name: Get yarn cache directory path
-            #         id: yarn-cache-dir-path
-            #         run: echo "::set-output name=dir::$(yarn cache dir)"
-            #  
-            #       - name: Cache yarn cache
-            #         uses: actions/cache@v2
-            #         id: cache-yarn-cache
-            #         with:
-            #           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-            #           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-            #           restore-keys: |
-            #             ${{ runner.os }}-yarn-
-            #  
-            #       - name: Cache node_modules
-            #         id: cache-node-modules
-            #         uses: actions/cache@v2
-            #         with:
-            #           path: node_modules
-            #           key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
-            #           restore-keys: |
-            #             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
-            #
-            #      - name: clean cache
-            #        run: yarn cache clean
-            #      - name: clean cache 2
-            #        run: rm -Rf /home/runner/.cache/yarn
-            #      - name: cache list
-            #        run: yarn cache list
-            #      - run: yarn --version
-            #      - name: Install dependencies
-            #        # the reason we don't use a lockfile is that we always want the latest commit from pyroscope-io/pyroscope
-            #        run: yarn install --network-concurrency=1 --no-lockfile
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+ 
+      - name: Cache yarn cache
+        uses: actions/cache@v2
+        id: cache-yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+ 
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
-      - name: Build and test frontend
+      - name: Build plugin
         run: yarn build
+
+
+      # We reuse the same tests from the other repo, after all, why not?
+      # TODO: run other tests that are valid here
+      # eg: checking README etc
+      - name: Run grafana server
+        run: docker-compose -f pyroscope/grafana-plugin/panel/docker-compose.yml up -d
+      - name: Run tests
+        run: yarn --cwd pyroscope cy:panel:ci
+
