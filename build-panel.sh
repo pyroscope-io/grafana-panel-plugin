@@ -24,7 +24,7 @@ yarn --cwd "$cloneDst"
 # build panel
 yarn --cwd "$cloneDst" build:panel
 
-cp -r "$cloneDst/grafana-plugin/panel/dist" dist/
+cp -r "$cloneDst/grafana-plugin/panel/dist" dist
 
 ################
 # Add metadata #
@@ -32,3 +32,4 @@ cp -r "$cloneDst/grafana-plugin/panel/dist" dist/
 cp CHANGELOG.md dist/
 cp README.md dist/
 cp LICENSE dist/
+cp -R img dist/

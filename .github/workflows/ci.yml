@@ -68,6 +68,5 @@ jobs:
         if: always()
         with:
           name: cypress-snapshots
+          # TODO: scope to only store screenshots that refer to grafana
           path: pyroscope/cypress/snapshots
-          
-
