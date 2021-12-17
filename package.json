@@ -3,13 +3,7 @@
   "version": "1.0.1",
   "description": "Pyroscope plugin for grafana",
   "scripts": {
-    "build-flamegraph": "cd node_modules/pyroscope && pwd && yarn && make build-panel && cd ../../ && cp node_modules/pyroscope/webapp/public/assets/flamegraphComponent.js src/flamegraphComponent.js",
-    "build": "./build-panel.sh",
-    "test": "yarn build-flamegraph && grafana-toolkit plugin:test",
-    "dev": "yarn build-flamegraph && grafana-toolkit plugin:dev",
-    "watch": "yarn build-flamegraph && grafana-toolkit plugin:dev --watch",
-    "sign": "yarn build-flamegraph && grafana-toolkit plugin:sign",
-    "start": "yarn watch"
+    "build": "./build-panel.sh"
   },
   "author": "Mike Egorov",
   "license": "Apache-2.0",
