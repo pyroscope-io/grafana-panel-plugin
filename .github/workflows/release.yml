@@ -133,14 +133,25 @@ jobs:
           awk '/^## / {s++} s == 1 {print}' CHANGELOG.md > release_notes.md
           echo "::set-output name=path::release_notes.md"
 
+      - name: Create tag
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/v${{ steps.metadata.outputs.plugin-version }}',
+              sha: context.sha
+            })
+          
       - name: Create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: 'v${{ steps.metadata.outputs.plugin-version }}'
+          release_name: Release ${{ steps.metadata.outputs.plugin-version }}
           body_path: ${{ steps.changelog.outputs.path }}
           draft: true
 
