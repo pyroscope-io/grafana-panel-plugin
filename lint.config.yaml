@@ -1,0 +1,17 @@
+global:
+  enabled: true
+  severity: error
+  jsonOutput: false
+
+analyzers:
+  screenshots:
+    rules:
+      screenshots:
+        # TODO publish screenshots?
+        enabled: false
+
+  pluginname:
+    rules:
+      # TODO update our name?
+      human-friendly-name:
+        enabled: false

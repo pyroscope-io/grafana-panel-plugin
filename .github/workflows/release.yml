@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*.*.*" # Run workflow on version tags, e.g. v1.0.0.
+    branches:
+    - main
 
 jobs:
   release:
@@ -13,19 +13,14 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Setup Node.js environment
-        uses: actions/setup-node@v2.1.2
+        uses: actions/setup-node@v2
         with:
-          node-version: "14.x"
-
-      - name: Setup Go environment
-        uses: actions/setup-go@v2
-        with:
-          go-version: "1.15"
+          node-version: "14.17"
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-
+ 
       - name: Cache yarn cache
         uses: actions/cache@v2
         id: cache-yarn-cache
@@ -34,7 +29,7 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
+ 
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v2
@@ -44,41 +39,51 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile;
-        if: |
-          steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
-          steps.cache-node-modules.outputs.cache-hit != 'true'
-
-      - name: Build and test frontend
+      - name: Build plugin
         run: yarn build
 
-      - name: Check for backend
-        id: check-for-backend
-        run: |
-          if [ -f "Magefile.go" ]
-          then
-            echo "::set-output name=has-backend::true"
-          fi
-
-      - name: Test backend
-        if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: magefile/mage-action@v1
-        with:
-          version: latest
-          args: coverage
-
-      - name: Build backend
-        if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: magefile/mage-action@v1
-        with:
-          version: latest
-          args: buildAll
-
       - name: Sign plugin
-        run: yarn sign
+        run: |
+          # We only have a single dependency, grafana-toolkit
+          # So we install next to where it's needed
+          yarn
+          yarn sign
         env:
           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
+
+      # We reuse the same tests from the other repo, after all, why not?
+      # TODO: run other tests that are valid here
+      # eg: checking README etc
+      - name: Run grafana server
+        run: docker-compose -f pyroscope/grafana-plugin/panel/docker-compose.yml up -d
+      - name: Run tests
+        run: yarn --cwd pyroscope cy:panel:ci
+        env:
+          CYPRESS_VIDEO: true
+          CYPRESS_COMPARE_SNAPSHOTS: true
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: pyroscope/cypress/screenshots
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: pyroscope/cypress/videos
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-snapshots
+          # TODO: scope to only store screenshots that refer to grafana
+          path: pyroscope/cypress/snapshots
+
+      # Setup the go environment, since the grafana plugin linter isn't distributed as a binary
+      - name: Setup Go environment
+        if: steps.check-for-backend.outputs.has-backend == 'true'
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.16"
 
       - name: Get plugin metadata
         id: metadata
@@ -99,15 +104,6 @@ jobs:
 
           echo ::set-output name=github-tag::${GITHUB_REF#refs/*/}
 
-      - name: Read changelog
-        id: changelog
-        run: |
-          awk '/^## / {s++} s == 1 {print}' CHANGELOG.md > release_notes.md
-          echo "::set-output name=path::release_notes.md"
-
-      - name: Check package version
-        run: if [ "v${{ steps.metadata.outputs.plugin-version }}" != "${{ steps.metadata.outputs.github-tag }}" ]; then printf "\033[0;31mPlugin version doesn't match tag name\033[0m\n"; exit 1; fi
-
       - name: Package plugin
         id: package-plugin
         run: |
@@ -118,11 +114,24 @@ jobs:
 
       - name: Lint plugin
         run: |
+          export PATH="$(go env GOPATH)/bin/:$PATH"
+
           git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/cmd/plugincheck
+          pushd ./plugin-validator/pkg/cmd/plugincheck2
           go install
           popd
-          plugincheck ${{ steps.metadata.outputs.archive }}
+          plugincheck2 -config lint.config.yaml ${{ steps.metadata.outputs.archive }}
+      # until here it's pretty much the same as ci.yml
+      # TODO: share the code somehow
+
+      ##########################
+      # Release Specific Stuff #
+      ##########################
+      - name: Read changelog
+        id: changelog
+        run: |
+          awk '/^## / {s++} s == 1 {print}' CHANGELOG.md > release_notes.md
+          echo "::set-output name=path::release_notes.md"
 
       - name: Create release
         id: create_release
@@ -159,6 +168,5 @@ jobs:
 
       - name: Publish to Grafana.com
         run: |
-          echo A draft release has been created for your plugin. Please review and publish it. Then submit your plugin to grafana.com/plugins by opening a PR to https://github.com/grafana/grafana-plugin-repository with the following entry:
-          echo
-          echo '{ "id": "${{ steps.metadata.outputs.plugin-id }}", "type": "${{ steps.metadata.outputs.plugin-type }}", "url": "https://github.com/${{ github.repository }}", "versions": [ { "version": "${{ steps.metadata.outputs.plugin-version }}", "commit": "${{ github.sha }}", "url": "https://github.com/${{ github.repository }}", "download": { "any": { "url": "https://github.com/${{ github.repository }}/releases/download/v${{ steps.metadata.outputs.plugin-version }}/${{ steps.metadata.outputs.archive }}", "md5": "${{ steps.package-plugin.outputs.checksum }}" } } } ] }' | jq .
+          echo "A draft release has been created for your plugin. Please review and publish it."
+          echo "To publish a new version, follow https://github.com/grafana/grafana-plugin-repository#maintain-your-plugin"
