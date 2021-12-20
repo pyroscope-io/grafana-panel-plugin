@@ -70,6 +70,7 @@ jobs:
           # TODO: scope to only store screenshots that refer to grafana
           path: pyroscope/cypress/snapshots
 
+      # Setup the go environment, since the grafana plugin linter isn't distributed as a binary
       - name: Setup Go environment
         if: steps.check-for-backend.outputs.has-backend == 'true'
         uses: actions/setup-go@v2
@@ -105,6 +106,8 @@ jobs:
 
       - name: Lint plugin
         run: |
+          export PATH="$(go env GOPATH):$PATH"
+
           git clone https://github.com/grafana/plugin-validator
           pushd ./plugin-validator/pkg/cmd/plugincheck2
           go install
