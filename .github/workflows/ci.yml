@@ -43,6 +43,15 @@ jobs:
       - name: Build plugin
         run: yarn build
 
+      - name: Sign plugin
+        run: |
+          # We only have a single dependency, grafana-toolkit
+          # So we install next to where it's needed
+          yarn
+          yarn sign
+        env:
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
+
       # We reuse the same tests from the other repo, after all, why not?
       # TODO: run other tests that are valid here
       # eg: checking README etc
