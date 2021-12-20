@@ -3,7 +3,7 @@
 set -euo pipefail
 
 # TODO update this, use tags instead
-UPSTREAM_BRANCH="chore/grafana-panel-webpack"
+#UPSTREAM_BRANCH="007c54f6357c354c3093fec3f8de87252e2c73e6"
 PACKAGE_VERSION=$(cat package.json \
   | grep version \
   | head -1 \
@@ -19,7 +19,10 @@ cloneDst="pyroscope"
 rm -Rf dist/
 rm -Rf "$cloneDst"
 
-git clone --depth 1 --branch "$UPSTREAM_BRANCH" https://github.com/pyroscope-io/pyroscope.git "$cloneDst"
+#git clone --depth 1 --branch "$UPSTREAM_BRANCH" https://github.com/pyroscope-io/pyroscope.git "$cloneDst"
+git clone --depth 1 --branch "main" https://github.com/pyroscope-io/pyroscope.git "$cloneDst"
+git -C "$cloneDst" checkout "007c54f6357c354c3093fec3f8de87252e2c73e6"
+
 
 
 # https://github.com/typicode/husky/issues/851
