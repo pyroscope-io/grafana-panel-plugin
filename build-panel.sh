@@ -2,8 +2,7 @@
 
 set -euo pipefail
 
-# TODO update this, use tags instead
-#UPSTREAM_BRANCH="007c54f6357c354c3093fec3f8de87252e2c73e6"
+UPSTREAM_COMMIT="b30c01e72f7f26fb4494fb7dcab233dd4968095c"
 PACKAGE_VERSION=$(cat package.json \
   | grep version \
   | head -1 \
@@ -21,7 +20,7 @@ rm -Rf "$cloneDst"
 
 #git clone --depth 1 --branch "$UPSTREAM_BRANCH" https://github.com/pyroscope-io/pyroscope.git "$cloneDst"
 git clone --depth 1 --branch "main" https://github.com/pyroscope-io/pyroscope.git "$cloneDst"
-git -C "$cloneDst" checkout "007c54f6357c354c3093fec3f8de87252e2c73e6"
+git -C "$cloneDst" checkout "$UPSTREAM_COMMIT"
 
 
 
