@@ -8,7 +8,6 @@ describe('smoke', () => {
 
     cy.visit('http://localhost:3000/d/single-panel/pyroscope-demo?orgId=1');
 
-    cy.get('[data-testid="flamegraph-canvas"]');
-    //    cy.get('[data-testid="flamegraph-canvas"]').should('exist');
+    cy.get('[data-testid="flamegraph-canvas"]').should('exist');
   });
 });
