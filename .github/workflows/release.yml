@@ -126,7 +126,7 @@ jobs:
           tag_name: 'v${{ steps.metadata.outputs.plugin-version }}'
           release_name: Release ${{ steps.metadata.outputs.plugin-version }}
           body_path: ${{ steps.changelog.outputs.path }}
-          draft: true
+          draft: false
 
       - name: Add plugin to release
         id: upload-plugin-asset
