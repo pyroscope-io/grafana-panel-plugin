@@ -46,8 +46,6 @@ jobs:
 
       - name: Sign plugin
         run: |
-          # We only have a single dependency, grafana-toolkit
-          # So we install next to where it's needed
           yarn
           yarn sign
         env:

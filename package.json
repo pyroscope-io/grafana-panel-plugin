@@ -6,7 +6,7 @@
     "postinstall": "cp -r node_modules/@pyroscope/panel-plugin/dist .",
     "cy:open": "cypress open",
     "cy:ci": "cypress run",
-    "sign": "grafana-toolkit plugin:sign"
+    "sign": "npx grafana-toolkit plugin:sign"
   },
   "author": "Pyroscope devs",
   "license": "Apache-2.0",
@@ -14,7 +14,6 @@
     "node": ">=14.17.0"
   },
   "dependencies": {
-    "@grafana/toolkit": "^8.3.2",
     "@pyroscope/panel-plugin": "1.2.3",
     "cypress": "^9.5.0"
   }
