@@ -1708,6 +1708,20 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.5.4.tgz#de25b5da9f727985a3757fd59b5d028aba75841a"
   integrity sha512-ZpKr+WTb8zsajqgDkvCEWgp6d5eJT6Q63Ng2neTbzBO76Lbe91vX/iVIW9dikq+Fs3yEo+ls4cxeXABD2LtcbQ==
 
+"@pyroscope/flamegraph@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.0.5.tgz#ef9add7e12785c9bd505fffa60cb9e7e468b5643"
+  integrity sha512-Ebe0P00aSI7dA5Js38/hgBz7iR9G3FPVwGEGbcx+x9McLdw1gKhPzgyo3haOFenAR2GPAkmWA2yjI+GfpTWT6A==
+  dependencies:
+    "true-myth" "^5.1.2"
+
+"@pyroscope/panel-plugin@1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.2.2.tgz#5b3e96064f8e7967c664f2bfe1ef07499509226b"
+  integrity sha512-+12aLA9iN+7g+d1NUdggUuCsDaT9+xMZfek485SBnVuqMccvFzI/WvNStSlBp7240UDsb9HleRDYjg3aXVTYcQ==
+  dependencies:
+    "@pyroscope/flamegraph" "^0.0.5"
+
 "@react-aria/focus@3.4.1":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/@react-aria/focus/-/focus-3.4.1.tgz#76fc29e8f1b57b9c87240c9762d7fce7352c61eb"
@@ -11712,6 +11726,11 @@ tree-kill@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
+
+"true-myth@^5.1.2":
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/true-myth/-/true-myth-5.1.2.tgz#58a425b0aefe57eed279ac2d1b65e567153ea9b0"
+  integrity sha512-4A8CVJiDt35EhS2U4DYoU1Kg8nMdqpC4sIc4ktan/nE3T2u5kLd7fJ1ZSQTn5xO/A41IB7DLF8R8xL6l0MPgsQ==
 
 ts-easing@^0.2.0:
   version "0.2.0"

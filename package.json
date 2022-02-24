@@ -1,17 +1,17 @@
 {
   "name": "pyroscope-pyroscope-grafana",
-  "version": "1.1.0",
-  "description": "Pyroscope plugin for grafana",
+  "version": "0.0.0",
+  "description": "Pyroscope panel plugin for grafana",
   "scripts": {
-    "build": "./build-panel.sh",
-    "sign": "grafana-toolkit plugin:sign"
+    "sign": "cp -r node_modules/@pyroscope/panel-plugin/dist . && grafana-toolkit plugin:sign"
   },
-  "author": "Mike Egorov",
+  "author": "Pyroscope devs",
   "license": "Apache-2.0",
   "engines": {
     "node": ">=14.17.0"
   },
   "dependencies": {
-    "@grafana/toolkit": "^8.3.2"
+    "@grafana/toolkit": "^8.3.2",
+    "@pyroscope/panel-plugin": "1.2.2"
   }
 }
