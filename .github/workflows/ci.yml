@@ -49,7 +49,7 @@ jobs:
       # Smoke test
       # We already tested it extensively in the other repository
       - name: Run grafana server
-        run: docker-compose -f pyroscope/grafana-plugin/panel/docker-compose.yml up -d
+        run: docker-compose -f docker-compose.yml up -d
       - name: Run tests
         run: yarn cy:ci
         env:
