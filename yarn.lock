@@ -1747,10 +1747,10 @@
   dependencies:
     "true-myth" "^5.1.2"
 
-"@pyroscope/panel-plugin@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.2.2.tgz#5b3e96064f8e7967c664f2bfe1ef07499509226b"
-  integrity sha512-+12aLA9iN+7g+d1NUdggUuCsDaT9+xMZfek485SBnVuqMccvFzI/WvNStSlBp7240UDsb9HleRDYjg3aXVTYcQ==
+"@pyroscope/panel-plugin@1.2.3-891-5f9f964.0":
+  version "1.2.3-891-5f9f964.0"
+  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.2.3-891-5f9f964.0.tgz#34cc357acfa5610c843ebf913dcf5817bf106e3d"
+  integrity sha512-Wg6ArurPqUzHGGfMBEw0i4qeQ0yz41GxBAdeGNend7ELeu0BSdeOXjNp6eXL8rqN+dd/XvPIEP1qB8jpShxAeA==
   dependencies:
     "@pyroscope/flamegraph" "^0.0.5"
 
