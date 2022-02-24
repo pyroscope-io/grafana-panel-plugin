@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+* Remove broken export button
+* Improve flamegraph coloring for go
+
 ## 1.1.0
 * Add context menu (triggered by right clicking the flamegraph)
 * Add toolbar
