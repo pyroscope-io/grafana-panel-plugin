@@ -30,7 +30,7 @@ e2e-results/
 # Editors
 .idea
 
-src/flamegraphComponent.js
-pyroscope
 dist.zip
 plugin-validator
+
+cypress/videos

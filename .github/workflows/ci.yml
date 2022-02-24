@@ -1,5 +1,8 @@
 name: CI
 
+env:
+  CYPRESS_CACHE_FOLDER: cypress/cache
+
 on:
   pull_request:
     branches:
@@ -27,38 +30,37 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
- 
       - name: Cache node_modules
         id: cache-node-modules
         uses: actions/cache@v2
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-${{ matrix.node-version }}-node-modules-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
+            ${{ runner.os }}-${{ matrix.node-version }}-node-modules-
+      - name: Cache Cypress Binary
+        id: cache-cypress-binary
+        uses: actions/cache@v2
+        with:
+          path: cypress/cache
+          key: cypress-binary-${{ hashFiles('yarn.lock') }}
 
-      - name: Build plugin
-        run: yarn build
+      - name: Pull dependencies
+        run: yarn
 
       - name: Sign plugin
-        run: |
-          # We only have a single dependency, grafana-toolkit
-          # So we install next to where it's needed
-          yarn
-          yarn sign
+        run: yarn sign
         env:
           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
 
-      # We reuse the same tests from the other repo, after all, why not?
-      # TODO: run other tests that are valid here
-      # eg: checking README etc
+      # Smoke test
+      # We already tested it extensively in the other repository
       - name: Run grafana server
-        run: docker-compose -f pyroscope/grafana-plugin/panel/docker-compose.yml up -d
+        run: docker-compose -f docker-compose.yml up -d
       - name: Run tests
-        run: yarn --cwd pyroscope cy:panel:ci
+        run: yarn cy:ci
         env:
           CYPRESS_VIDEO: true
-          CYPRESS_COMPARE_SNAPSHOTS: true
       - uses: actions/upload-artifact@v2
         if: always()
         with:
@@ -69,12 +71,6 @@ jobs:
         with:
           name: cypress-videos
           path: pyroscope/cypress/videos
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: cypress-snapshots
-          # TODO: scope to only store screenshots that refer to grafana
-          path: pyroscope/cypress/snapshots
 
       # Setup the go environment, since the grafana plugin linter isn't distributed as a binary
       - name: Setup Go environment
