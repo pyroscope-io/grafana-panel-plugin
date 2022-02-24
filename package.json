@@ -1,9 +1,12 @@
 {
   "name": "pyroscope-pyroscope-grafana",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Pyroscope panel plugin for grafana",
   "scripts": {
-    "sign": "cp -r node_modules/@pyroscope/panel-plugin/dist . && grafana-toolkit plugin:sign"
+    "postinstall": "cp -r node_modules/@pyroscope/panel-plugin/dist .",
+    "cy:open": "cypress open",
+    "cy:ci": "cypress run",
+    "sign": "grafana-toolkit plugin:sign"
   },
   "author": "Pyroscope devs",
   "license": "Apache-2.0",
@@ -12,6 +15,7 @@
   },
   "dependencies": {
     "@grafana/toolkit": "^8.3.2",
-    "@pyroscope/panel-plugin": "1.2.2"
+    "@pyroscope/panel-plugin": "1.2.2",
+    "cypress": "^9.5.0"
   }
 }
