@@ -37,6 +37,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.node-version }}-nodemodules-
 
+      - name: Cache Cypress Binary
+        id: cache-cypress-binary
+        uses: actions/cache@v2
+        with:
+          path: cypress/cache
+          key: cypress-binary-${{ hashFiles('yarn.lock') }}
+
       - name: Sign plugin
         run: |
           # We only have a single dependency, grafana-toolkit
