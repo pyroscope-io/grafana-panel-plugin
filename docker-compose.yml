@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   grafana:
-    image: grafana/grafana:8.1.1
+    image: grafana/grafana:9.2.4
     volumes:
       - ./dist:/var/lib/grafana/plugins/pyroscope-panel
       - ./grafana.ini:/etc/grafana/grafana.ini
