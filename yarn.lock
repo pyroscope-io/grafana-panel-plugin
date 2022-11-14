@@ -2113,19 +2113,19 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@pyroscope/flamegraph@^0.29.0":
-  version "0.29.0"
-  resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.29.0.tgz#bbfc844125085bbbdf3b052518e4f6486f2e980b"
-  integrity sha512-xFZjKp+ThOzIdiHrOzFmBWkc31Xm3NyAZTpp37NW1qP+0VSYEDWp6BRmS1Rn/wXjXs4rBKwA9Uwyjt0fNtVMyA==
+"@pyroscope/flamegraph@^0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.30.0.tgz#58a8ff50bce7b702368c90082bee1eb339f693a4"
+  integrity sha512-Hf1+S/4JxgnE/QZGauvU+N7kaDW1F2GJIJXylYSIPV2OoFnPS+gFWX4UZGxxJ1qehlrhjEV3LXk1xNNO9uPKYA==
 
-"@pyroscope/panel-plugin@1.3.74":
-  version "1.3.74"
-  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.3.74.tgz#b1bfe68c64d46b733c4fcd1c2c1c4a85915d1a56"
-  integrity sha512-UrrNS7ZZOn7a+PTVdCmbM2y9gYsRLcSgBRTRzyUtgps5s+g+kLasGdTEN3HtWkoRfMGyXolIYg+BRwO5VVNsXw==
+"@pyroscope/panel-plugin@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.4.0.tgz#aba3519f26ce6d7fe111e6ef987bd54e35332150"
+  integrity sha512-pTwLVecc826OX57Aswbd5xN7RdMGECnpNQVW/nut7Q0z03sa1mjihVVpyyvwyCSq28t8WEUqil8wJ2EwDfcjYA==
   dependencies:
     "@grafana/data" "^8.3.1"
     "@grafana/runtime" "^8.3.1"
-    "@pyroscope/flamegraph" "^0.29.0"
+    "@pyroscope/flamegraph" "^0.30.0"
 
 "@react-aria/button@3.4.3":
   version "3.4.3"
