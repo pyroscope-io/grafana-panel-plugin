@@ -41,14 +41,13 @@ jobs:
 
       - name: Pull dependencies
         run: yarn
-      - run: yarn cypress install
       - name: Cache Cypress Binary
         id: cache-cypress-binary
         uses: actions/cache@v2
         with:
           path: cypress/cache
           key: cypress-binary-${{ hashFiles('yarn.lock') }}
-
+      - run: yarn cypress install
       - name: Sign plugin
         run: yarn sign
         env:
