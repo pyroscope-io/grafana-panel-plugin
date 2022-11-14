@@ -2118,10 +2118,10 @@
   resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.30.0.tgz#58a8ff50bce7b702368c90082bee1eb339f693a4"
   integrity sha512-Hf1+S/4JxgnE/QZGauvU+N7kaDW1F2GJIJXylYSIPV2OoFnPS+gFWX4UZGxxJ1qehlrhjEV3LXk1xNNO9uPKYA==
 
-"@pyroscope/panel-plugin@1.4.0":
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.4.0.tgz#aba3519f26ce6d7fe111e6ef987bd54e35332150"
-  integrity sha512-pTwLVecc826OX57Aswbd5xN7RdMGECnpNQVW/nut7Q0z03sa1mjihVVpyyvwyCSq28t8WEUqil8wJ2EwDfcjYA==
+"@pyroscope/panel-plugin@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.4.1.tgz#9e02dc994532be5c2ad0be3857e4f2baa03dca57"
+  integrity sha512-pbB7Hu/AO2VKnFXJ8CzXdkWLgKeD/7ZzQtoKzPoTZa4SEt0VeR3ReVXeyXPPuMcwtD44f58vvOtUpHHZRST8og==
   dependencies:
     "@grafana/data" "^8.3.1"
     "@grafana/runtime" "^8.3.1"
