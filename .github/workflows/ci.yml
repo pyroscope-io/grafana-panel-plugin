@@ -41,9 +41,7 @@ jobs:
 
       - name: Pull dependencies
         run: yarn
-
-      - run: yarn bin cypress install
-
+      - run: yarn cypress install
       - name: Cache Cypress Binary
         id: cache-cypress-binary
         uses: actions/cache@v2
