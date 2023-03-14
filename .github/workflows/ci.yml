@@ -51,12 +51,6 @@ jobs:
         env:
           GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
 
-      - name: Setup Go environment
-        if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: actions/setup-go@v2
-        with:
-          go-version: "1.16"
-
       - name: Get plugin metadata
         id: metadata
         run: |
@@ -84,12 +78,9 @@ jobs:
           md5sum ${{ steps.metadata.outputs.archive }} > ${{ steps.metadata.outputs.archive-checksum }}
           echo "::set-output name=checksum::$(cat ./${{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)"
 
-      - name: Lint plugin
-        run: |
-          export PATH="$(go env GOPATH)/bin/:$PATH"
+      - uses: ./.github/actions/lint-plugin/
+        with:
+          file: ${{ steps.metadata.outputs.archive }}
+          enable-version-analyzer: false
 
-          git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/pkg/cmd/plugincheck2
-          go install
-          popd
-          plugincheck2 -config lint.config.yaml ${{ steps.metadata.outputs.archive }}
+
