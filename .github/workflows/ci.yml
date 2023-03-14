@@ -14,45 +14,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-node/
       - run: yarn sign
-        env:
-          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
-
       - uses: ./.github/actions/package-plugin/
         id: package-plugin
-
+        with:
+          grafana-token: ${{ secrets.GRAFANA_API_KEY }}
       - uses: ./.github/actions/lint-plugin/
         with:
           file: ${{ steps.package-plugin.outputs.archive }}
           enable-version-analyzer: false
-  cypress:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/actions/setup-node/
-      - run: yarn sign
-        env:
-          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
-      - name: Cache Cypress Binary
-        id: cache-cypress-binary
-        uses: actions/cache@v2
-        with:
-          path: cypress/cache
-          key: cypress-binary-${{ hashFiles('yarn.lock') }}
-      - run: yarn cypress install
-      - name: Run grafana server
-        run: docker-compose -f docker-compose.yml up -d
-
-      - name: Run tests
-        run: yarn cy:ci
-        env:
-          CYPRESS_VIDEO: true
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: cypress-screenshots
-          path: pyroscope/cypress/screenshots
-      - uses: actions/upload-artifact@v2
-        if: always()
-        with:
-          name: cypress-videos
-          path: pyroscope/cypress/videos

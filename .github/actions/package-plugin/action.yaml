@@ -1,4 +1,8 @@
 name: 'package-plugin'
+inputs:
+  grafana-token:
+    description: 'Token to be used when signing (from grafana.com)'
+    required: true
 outputs:
   archive:
     description: "The plugin zip file"
@@ -9,6 +13,10 @@ outputs:
 runs:
   using: "composite"
   steps:
+  - run: yarn sign
+    shell: bash
+    env:
+      GRAFANA_API_KEY: ${{ inputs.grafana-token }}
   - name: Get plugin metadata
     id: metadata
     shell: bash
