@@ -37,5 +37,6 @@ runs:
       run: yarn build
       shell: bash
     - run: yarn sign
+      shell: bash
       env:
         GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
