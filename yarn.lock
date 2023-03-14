@@ -1362,6 +1362,31 @@
     uplot "1.6.22"
     xss "1.0.11"
 
+"@grafana/data@8.5.21":
+  version "8.5.21"
+  resolved "https://registry.yarnpkg.com/@grafana/data/-/data-8.5.21.tgz#71f4653cd928af4b0aa27180e79ec4aa06508048"
+  integrity sha512-lJuwPxwzyE3vroQ9CqyiGc7PeTYHTPiVHKeJePQwFLl0F2XHf5y1v6VaCpb5SfGDmar1tcG8lrcc0KN4aplNfA==
+  dependencies:
+    "@braintree/sanitize-url" "6.0.0"
+    "@grafana/schema" "8.5.21"
+    "@types/d3-interpolate" "^1.4.0"
+    d3-interpolate "1.4.0"
+    date-fns "2.28.0"
+    eventemitter3 "4.0.7"
+    lodash "4.17.21"
+    marked "4.0.12"
+    moment "2.29.2"
+    moment-timezone "0.5.34"
+    ol "6.14.1"
+    papaparse "5.3.2"
+    react "17.0.2"
+    react-dom "17.0.2"
+    regenerator-runtime "0.13.9"
+    rxjs "7.5.5"
+    tslib "2.3.1"
+    uplot "1.6.22"
+    xss "1.0.11"
+
 "@grafana/e2e-selectors@8.3.2":
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-8.3.2.tgz#6ff26e6c9de722f591f832cc5e887e296bfcc48d"
@@ -1377,6 +1402,15 @@
   version "8.5.15"
   resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-8.5.15.tgz#9e026a7d0ca8513bc90c2028faea2f1faabdda0b"
   integrity sha512-5YXe3IgLJ7lI8lxTc3VdSUuSNi39w6jkelWActUqCJhUvrtIH+ARRb172fb7BxDbo0mNSsfUW4K5/a2Jq2gA6A==
+  dependencies:
+    "@grafana/tsconfig" "^1.2.0-rc1"
+    tslib "2.3.1"
+    typescript "4.4.4"
+
+"@grafana/e2e-selectors@8.5.21":
+  version "8.5.21"
+  resolved "https://registry.yarnpkg.com/@grafana/e2e-selectors/-/e2e-selectors-8.5.21.tgz#6197351746dc0bcb90543d40ea04bb084b230a44"
+  integrity sha512-k7w5ohkeNrCNNMuoQCnIi3OS0BsFuVCCl7FY13o3hGWxH5WUDJhxIt80bkBZtQgJeKRb/izML3Sq5ggTA5fx5A==
   dependencies:
     "@grafana/tsconfig" "^1.2.0-rc1"
     tslib "2.3.1"
@@ -1424,6 +1458,13 @@
   version "8.5.15"
   resolved "https://registry.yarnpkg.com/@grafana/schema/-/schema-8.5.15.tgz#a66a6c6cc2700275f840bcda3c10e142e3021b09"
   integrity sha512-kt3qiuPXDMvsVFPw15A9GmWFeNn31U7ismMV3wWl9nt+u9s4upNJrfd3gcKqPC5M6nnSk+6jRvZRSTbmrwdPMA==
+  dependencies:
+    tslib "2.3.1"
+
+"@grafana/schema@8.5.21":
+  version "8.5.21"
+  resolved "https://registry.yarnpkg.com/@grafana/schema/-/schema-8.5.21.tgz#5b9671861e460cb875b77485db1f4a6fde845e54"
+  integrity sha512-30aNWtxSoC96GBmVohGYFhtMXEtNmh7nGXK1BJBLMm1RxNxheNb1ym2WvMAGQP/J1J622EY/e+N65usAUltonw==
   dependencies:
     tslib "2.3.1"
 
@@ -1618,6 +1659,74 @@
     "@grafana/data" "8.5.15"
     "@grafana/e2e-selectors" "8.5.15"
     "@grafana/schema" "8.5.15"
+    "@monaco-editor/react" "4.3.1"
+    "@popperjs/core" "2.11.4"
+    "@react-aria/button" "3.4.3"
+    "@react-aria/dialog" "3.1.8"
+    "@react-aria/focus" "3.5.4"
+    "@react-aria/menu" "3.4.3"
+    "@react-aria/overlays" "3.8.1"
+    "@react-stately/menu" "3.2.6"
+    "@sentry/browser" "6.19.1"
+    ansicolor "1.1.100"
+    calculate-size "1.1.1"
+    classnames "2.3.1"
+    core-js "3.21.1"
+    d3 "5.15.0"
+    date-fns "2.28.0"
+    hoist-non-react-statics "3.3.2"
+    immutable "4.0.0"
+    is-hotkey "0.2.0"
+    jquery "3.6.0"
+    lodash "4.17.21"
+    memoize-one "6.0.0"
+    moment "2.29.2"
+    monaco-editor "^0.31.1"
+    ol "6.14.1"
+    prismjs "1.27.0"
+    rc-cascader "3.4.1"
+    rc-drawer "4.4.3"
+    rc-slider "9.7.5"
+    rc-time-picker "^3.7.3"
+    react "17.0.2"
+    react-beautiful-dnd "13.1.0"
+    react-calendar "3.7.0"
+    react-colorful "5.5.1"
+    react-custom-scrollbars-2 "4.4.0"
+    react-dom "17.0.2"
+    react-dropzone "12.0.4"
+    react-highlight-words "0.17.0"
+    react-hook-form "7.5.3"
+    react-inlinesvg "2.3.0"
+    react-popper "2.2.5"
+    react-popper-tooltip "^4.3.1"
+    react-router-dom "^5.2.0"
+    react-select "5.2.2"
+    react-select-event "^5.1.0"
+    react-table "7.7.0"
+    react-transition-group "4.4.2"
+    react-use "17.3.2"
+    react-window "1.8.6"
+    rxjs "7.5.5"
+    slate "0.47.9"
+    slate-plain-serializer "0.7.11"
+    slate-react "0.22.10"
+    tinycolor2 "1.4.2"
+    tslib "2.3.1"
+    uplot "1.6.22"
+    uuid "8.3.2"
+
+"@grafana/ui@^8.3.1":
+  version "8.5.21"
+  resolved "https://registry.yarnpkg.com/@grafana/ui/-/ui-8.5.21.tgz#000ca5bd288d6701d48b6fabcde959c3181a63bb"
+  integrity sha512-vMQ6RkInlvlMgOdsc830g9yQJ4TMZQFLKlTbfLFHe4j5Ij6n2sOhupaRUM447LHiINEQWAsoh93L/CL7gS8Sdw==
+  dependencies:
+    "@emotion/css" "11.7.1"
+    "@emotion/react" "11.8.2"
+    "@grafana/aws-sdk" "0.0.35"
+    "@grafana/data" "8.5.21"
+    "@grafana/e2e-selectors" "8.5.21"
+    "@grafana/schema" "8.5.21"
     "@monaco-editor/react" "4.3.1"
     "@popperjs/core" "2.11.4"
     "@react-aria/button" "3.4.3"
@@ -2113,19 +2222,20 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.6.tgz#cee20bd55e68a1720bdab363ecf0c821ded4cd45"
   integrity sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==
 
-"@pyroscope/flamegraph@^0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.30.0.tgz#58a8ff50bce7b702368c90082bee1eb339f693a4"
-  integrity sha512-Hf1+S/4JxgnE/QZGauvU+N7kaDW1F2GJIJXylYSIPV2OoFnPS+gFWX4UZGxxJ1qehlrhjEV3LXk1xNNO9uPKYA==
-
-"@pyroscope/panel-plugin@1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@pyroscope/panel-plugin/-/panel-plugin-1.4.1.tgz#9e02dc994532be5c2ad0be3857e4f2baa03dca57"
-  integrity sha512-pbB7Hu/AO2VKnFXJ8CzXdkWLgKeD/7ZzQtoKzPoTZa4SEt0VeR3ReVXeyXPPuMcwtD44f58vvOtUpHHZRST8og==
+"@pyroscope/datasource-plugin@1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@pyroscope/datasource-plugin/-/datasource-plugin-1.2.1.tgz#91dc8700ba05363399a1b1b10cfc3f76db5fe455"
+  integrity sha512-N/o3w9JYfXny3b+GuduypnL5TRFoBfixKKTCyXSCOMObnN5Fn6v7k8iS+xvA0RZvigFFjjaW5JZUdnRbt1NAUQ==
   dependencies:
     "@grafana/data" "^8.3.1"
     "@grafana/runtime" "^8.3.1"
-    "@pyroscope/flamegraph" "^0.30.0"
+    "@grafana/ui" "^8.3.1"
+    lodash "^4.17.21"
+
+"@pyroscope/flamegraph@^0.35.4":
+  version "0.35.4"
+  resolved "https://registry.yarnpkg.com/@pyroscope/flamegraph/-/flamegraph-0.35.4.tgz#bb7d433d311d2b2cbb159c291d627c162095c503"
+  integrity sha512-xsUYLtO9kzdIU1UYoNQLhLNOfMtzwFyLYZEhTBs+XiDQfn9yoNj4kFbA9ms+CPJ5WOp6aITFQcmxv7EK/u2lgQ==
 
 "@react-aria/button@3.4.3":
   version "3.4.3"
@@ -2919,6 +3029,11 @@
   version "4.14.149"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
   integrity sha512-ijGqzZt/b7BfzcK9vTrS6MFljQRPn5BFWOx8oE0GYxribu6uV+aA9zZuXI1zc/etK9E8nrgdoF2+LgUw7+9tJQ==
+
+"@types/lodash@latest":
+  version "4.14.191"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.191.tgz#09511e7f7cba275acd8b419ddac8da9a6a79e2fa"
+  integrity sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==
 
 "@types/mime@^1":
   version "1.3.2"
