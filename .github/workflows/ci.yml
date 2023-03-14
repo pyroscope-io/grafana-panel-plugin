@@ -13,6 +13,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-node/
+      - run: yarn sign
+        shell: bash
+        env:
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
       - name: Cache Cypress Binary
         id: cache-cypress-binary
         uses: actions/cache@v2
@@ -42,6 +46,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-node/
+      - run: yarn sign
+        shell: bash
+        env:
+          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
 
       - name: Setup Go environment
         if: steps.check-for-backend.outputs.has-backend == 'true'
