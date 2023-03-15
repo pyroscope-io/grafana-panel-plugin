@@ -9,7 +9,7 @@ outputs:
     value: ${{ steps.metadata.outputs.archive }}
   checksum:
     description: "The checksum of the zip file"
-    value: ${{ steps.package.outputs.checksum }}
+    value: ${{ steps.metadata.outputs.archive-checksum }}
 runs:
   using: "composite"
   steps:
@@ -38,7 +38,7 @@ runs:
       echo ::set-output name=github-tag::${GITHUB_REF#refs/*/}
 
   - name: Package plugin
-    id: package-plugin
+    id: packag-
     shell: bash
     run: |
       mv dist ${{ steps.metadata.outputs.plugin-id }}

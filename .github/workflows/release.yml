@@ -1,132 +1,26 @@
 name: Release
 
 on:
-  push:
-    branches:
-    - main
+  release:
+    # https://stackoverflow.com/a/61066906
+    types: [published]
 
 jobs:
   release:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14.17"
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
- 
-      - name: Cache yarn cache
-        uses: actions/cache@v2
-        id: cache-yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-      - name: Cache node_modules
-        id: cache-node-modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ matrix.node-version }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.node-version }}-node-modules-
-      - name: Pull dependencies
-        run: yarn
-      - name: Cache Cypress Binary
-        id: cache-cypress-binary
-        uses: actions/cache@v2
-        with:
-          path: cypress/cache
-          key: cypress-binary-${{ hashFiles('yarn.lock') }}
-      - run: yarn cypress install
-      - name: Sign plugin
-        run: yarn sign
-        env:
-          GRAFANA_API_KEY: ${{ secrets.GRAFANA_API_KEY }} # Requires a Grafana API key from Grafana.com.
-
-      # Setup the go environment, since the grafana plugin linter isn't distributed as a binary
-      - name: Setup Go environment
-        if: steps.check-for-backend.outputs.has-backend == 'true'
-        uses: actions/setup-go@v2
-        with:
-          go-version: "1.16"
-
-      - name: Get plugin metadata
-        id: metadata
-        run: |
-          sudo apt-get install jq
-
-          export GRAFANA_PLUGIN_ID=$(cat dist/plugin.json | jq -r .id)
-          export GRAFANA_PLUGIN_VERSION=$(cat dist/plugin.json | jq -r .info.version)
-          export GRAFANA_PLUGIN_TYPE=$(cat dist/plugin.json | jq -r .type)
-          export GRAFANA_PLUGIN_ARTIFACT=${GRAFANA_PLUGIN_ID}-${GRAFANA_PLUGIN_VERSION}.zip
-          export GRAFANA_PLUGIN_ARTIFACT_CHECKSUM=${GRAFANA_PLUGIN_ARTIFACT}.md5
-
-          echo "::set-output name=plugin-id::${GRAFANA_PLUGIN_ID}"
-          echo "::set-output name=plugin-version::${GRAFANA_PLUGIN_VERSION}"
-          echo "::set-output name=plugin-type::${GRAFANA_PLUGIN_TYPE}"
-          echo "::set-output name=archive::${GRAFANA_PLUGIN_ARTIFACT}"
-          echo "::set-output name=archive-checksum::${GRAFANA_PLUGIN_ARTIFACT_CHECKSUM}"
-
-          echo ::set-output name=github-tag::${GITHUB_REF#refs/*/}
-
-      - name: Package plugin
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-node/
+      - run: yarn sign
+      - uses: ./.github/actions/package-plugin/
         id: package-plugin
-        run: |
-          mv dist ${{ steps.metadata.outputs.plugin-id }}
-          zip ${{ steps.metadata.outputs.archive }} ${{ steps.metadata.outputs.plugin-id }} -r
-          md5sum ${{ steps.metadata.outputs.archive }} > ${{ steps.metadata.outputs.archive-checksum }}
-          echo "::set-output name=checksum::$(cat ./${{ steps.metadata.outputs.archive-checksum }} | cut -d' ' -f1)"
-
-      - name: Lint plugin
-        run: |
-          export PATH="$(go env GOPATH)/bin/:$PATH"
-
-          git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/pkg/cmd/plugincheck2
-          go install
-          popd
-          plugincheck2 -config lint.config.yaml ${{ steps.metadata.outputs.archive }}
-      # until here it's pretty much the same as ci.yml
-      # TODO: share the code somehow
-
-      ##########################
-      # Release Specific Stuff #
-      ##########################
-      - name: Read changelog
-        id: changelog
-        run: |
-          awk '/^## / {s++} s == 1 {print}' pyroscope-panel/CHANGELOG.md > release_notes.md
-          echo "::set-output name=path::release_notes.md"
-
-      - name: Create tag
-        uses: actions/github-script@v5
         with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/v${{ steps.metadata.outputs.plugin-version }}',
-              sha: context.sha
-            })
-          
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          grafana-token: ${{ secrets.GRAFANA_API_KEY }}
+      - uses: ./.github/actions/lint-plugin/
         with:
-          tag_name: 'v${{ steps.metadata.outputs.plugin-version }}'
-          release_name: Release ${{ steps.metadata.outputs.plugin-version }}
-          body_path: ${{ steps.changelog.outputs.path }}
-          draft: false
+          file: ${{ steps.package-plugin.outputs.archive }}
+          enable-version-analyzer: true
 
       - name: Add plugin to release
         id: upload-plugin-asset
@@ -134,9 +28,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.metadata.outputs.archive }}
-          asset_name: ${{ steps.metadata.outputs.archive }}
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ steps.package-plugin.outputs.archive }}
+          asset_name: ${{ steps.package-plugin.outputs.archive }}
           asset_content_type: application/zip
 
       - name: Add checksum to release
@@ -145,12 +39,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./${{ steps.metadata.outputs.archive-checksum }}
-          asset_name: ${{ steps.metadata.outputs.archive-checksum }}
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./${{ steps.package-plugin.outputs.checksum }}
+          asset_name: ${{ steps.package-plugin.outputs.checksum }}
           asset_content_type: text/plain
 
       - name: Publish to Grafana.com
         run: |
-          echo "A draft release has been created for your plugin. Please review and publish it."
+          echo "A release has been created for your plugin. Please review and publish it."
           echo "To publish a new version, follow https://github.com/grafana/grafana-plugin-repository#maintain-your-plugin"

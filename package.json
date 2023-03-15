@@ -1,6 +1,6 @@
 {
   "name": "pyroscope-pyroscope-grafana",
-  "version": "0.0.1",
+  "version": "1.4.1",
   "description": "Pyroscope panel plugin for grafana",
   "scripts": {
     "cy:open": "cypress open",
