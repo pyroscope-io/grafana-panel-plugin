@@ -1,0 +1,38 @@
+name: 'setup-node'
+description: 'Sets up nodejs'
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2
+      with:
+        node-version: "14.17"
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+      shell: bash
+
+    - name: Cache yarn cache
+      uses: actions/cache@v2
+      id: cache-yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Cache node_modules
+      id: cache-node-modules
+      uses: actions/cache@v2
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-${{ matrix.node-version }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-${{ matrix.node-version }}-node-modules-
+
+    - run: yarn --frozen-lockfile
+      shell: bash
+    - name: Build
+      run: yarn build
+      shell: bash
