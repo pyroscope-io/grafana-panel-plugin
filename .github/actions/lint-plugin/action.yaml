@@ -9,12 +9,15 @@ inputs:
 runs:
   using: "composite"
   steps:
+  - name: prepare config file
+    shell: bash
+    run: |
+      envsubst < lint.config.yaml > lint.config.yaml
+      cat lint.config.yaml
   - name: Lint plugin
     shell: bash
     run: |
       export PATH="$(go env GOPATH)/bin/:$PATH"
-      envsubst < lint.config.yaml > lint.config.yaml
-      cat lint.config.yaml
       git clone https://github.com/grafana/plugin-validator
       pushd ./plugin-validator/pkg/cmd/plugincheck2
       go install
