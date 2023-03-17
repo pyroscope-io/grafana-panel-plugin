@@ -28,7 +28,7 @@ jobs:
           path: lint.config.yaml
       - name: Lint plugin
         run: |
-          plugincheck2 -strict -config lint.config.yaml ${{ steps.package-plugin.outputs.archive }}
+          ./plugin-validator/pkg/cmd/plugincheck2 -strict -config lint.config.yaml ${{ steps.package-plugin.outputs.archive }}
         env:
           ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
           DEBUG: 1
