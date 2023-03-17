@@ -14,6 +14,7 @@ runs:
     run: |
       export PATH="$(go env GOPATH)/bin/:$PATH"
       envsubst < lint.config.yaml > lint.config.yaml
+      cat lint.config.yaml
       git clone https://github.com/grafana/plugin-validator
       pushd ./plugin-validator/pkg/cmd/plugincheck2
       go install
