@@ -10,14 +10,12 @@ runs:
   using: "composite"
   steps:
   - name: prepare config file
-    shell: bash
+    shell: bash -euxo pipefail {0}
     run: envsubst < lint.config.yaml > lint.config.yaml
-  - shell: bash
-    run: cat lint.config.yaml
-  - uses: pCYSl5EDgo/cat@master
-    id: hello
-    with:
-      path: lint.config.yaml
+  - run: cat lint.config.yaml
+    shell: bash -euxo pipefail {0}
+  - run: cat lint.config.yaml >&2
+    shell: bash
   - name: Lint plugin
     shell: bash
     run: |
