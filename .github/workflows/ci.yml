@@ -22,17 +22,12 @@ jobs:
         with:
           file: ${{ steps.package-plugin.outputs.archive }}
           enable-version-analyzer: false
+      - uses: pCYSl5EDgo/cat@master
+        id: hello
+        with:
+          path: lint.config.yaml
       - name: Lint plugin
         run: |
-          envsubst < lint.config.yaml > lint.config.yaml
-          cat lint.config.yaml
-          export PATH="$(go env GOPATH)/bin/:$PATH"
-          git clone https://github.com/grafana/plugin-validator
-          pushd ./plugin-validator/pkg/cmd/plugincheck2
-          git log -1
-          go install
-          popd
-
           plugincheck2 -strict -config lint.config.yaml ${{ steps.package-plugin.outputs.archive }}
         env:
           ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
