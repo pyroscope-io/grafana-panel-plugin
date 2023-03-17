@@ -11,9 +11,9 @@ runs:
   steps:
   - name: prepare config file
     shell: bash
-    run: |
-      envsubst < lint.config.yaml > lint.config.yaml
-      cat lint.config.yaml
+    run: envsubst < lint.config.yaml > lint.config.yaml
+  - shell: bash
+    run: cat lint.config.yaml
   - name: Lint plugin
     shell: bash
     run: |
