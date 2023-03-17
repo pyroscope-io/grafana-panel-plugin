@@ -13,6 +13,8 @@ jobs:
     steps:
     - name: Lint plugin
       run: |
+        envsubst < lint.config.yaml > lint.config.yaml
+        cat lint.config.yaml
         export PATH="$(go env GOPATH)/bin/:$PATH"
         git clone https://github.com/grafana/plugin-validator
         pushd ./plugin-validator/pkg/cmd/plugincheck2
