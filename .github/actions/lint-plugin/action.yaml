@@ -18,7 +18,7 @@ runs:
       go install
       popd
 
-      plugincheck2 -strict -config lint2.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
+      plugincheck2 -strict -config lint.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
     env:
       ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
       DEBUG: 1
