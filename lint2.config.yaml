@@ -1,6 +1,6 @@
 global:
   enabled: true
-  jsonOutput: false
+  jsonOutput: true
   reportAll: true
 
 analyzers:
