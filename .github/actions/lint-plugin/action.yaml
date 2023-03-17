@@ -14,9 +14,9 @@ runs:
   - name: prepare config file
     shell: bash -euxo pipefail {0}
     run: envsubst < lint.config.yaml > lint.config.yaml
-  - run: cat lint.config.yaml
-    shell: bash -euxo pipefail {0}
-  - run: cat lint.config.yaml >&2
+  - run: echo $(cat lint.config.yaml)
+    shell: bash
+  - run: echo "$(<lint.config.yaml)"
     shell: bash
   - name: Lint plugin
     shell: bash
