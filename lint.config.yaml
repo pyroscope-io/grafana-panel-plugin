@@ -6,5 +6,7 @@ global:
 analyzers:
   version:
     enabled: false
-      #  trackingscripts:
-      #    enabled: true
+  # there's a false positive happening
+  # TODO: update after https://github.com/grafana/plugin-validator/issues/105 is fixed
+  trackingscripts:
+    enabled: false
