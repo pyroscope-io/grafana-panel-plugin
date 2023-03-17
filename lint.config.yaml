@@ -5,4 +5,4 @@ global:
 
 analyzers:
   version:
-    enabled: ${ENABLE_VERSION_ANALYZER}
+    enabled: false
