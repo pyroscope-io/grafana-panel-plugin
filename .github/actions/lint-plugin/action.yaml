@@ -9,6 +9,8 @@ inputs:
 runs:
   using: "composite"
   steps:
+  - run: echo test
+    shell: bash
   - name: prepare config file
     shell: bash -euxo pipefail {0}
     run: envsubst < lint.config.yaml > lint.config.yaml
