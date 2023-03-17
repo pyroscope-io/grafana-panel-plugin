@@ -6,3 +6,5 @@ global:
 analyzers:
   version:
     enabled: false
+  trackingscripts:
+    enabled: true
