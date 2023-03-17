@@ -14,6 +14,10 @@ runs:
     run: envsubst < lint.config.yaml > lint.config.yaml
   - shell: bash
     run: cat lint.config.yaml
+  - uses: pCYSl5EDgo/cat@master
+    id: hello
+    with:
+      path: lint.config.yaml
   - name: Lint plugin
     shell: bash
     run: |
