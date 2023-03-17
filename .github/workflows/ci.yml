@@ -8,6 +8,15 @@ on:
     branches:
       - main
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Lint plugin
+      run: |
+        export PATH="$(go env GOPATH)/bin/:$PATH"
+        git clone https://github.com/grafana/plugin-validator
+        pushd ./plugin-validator/pkg/cmd/plugincheck2
+        git log -1
   lint:
     runs-on: ubuntu-latest
     steps:
