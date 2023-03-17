@@ -9,6 +9,13 @@ inputs:
 runs:
   using: "composite"
   steps:
+  - name: Render Deployment YAML
+    uses: nowactions/envsubst@v1
+    with:
+      input: ./lint.config.yaml.tmpl
+      output: ./lint.config.yaml
+    env:
+      ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
   - name: Lint plugin
     shell: bash
     run: |
@@ -20,6 +27,5 @@ runs:
 
       plugincheck2 -strict -config lint.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
     env:
-      ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
       DEBUG: 1
 
