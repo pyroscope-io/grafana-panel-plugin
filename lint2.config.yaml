@@ -1,0 +1,11 @@
+global:
+  enabled: true
+  jsonOutput: true
+  reportAll: true
+
+analyzers:
+  version:
+    enabled: false
+  trackingscripts:
+    enabled: true
+

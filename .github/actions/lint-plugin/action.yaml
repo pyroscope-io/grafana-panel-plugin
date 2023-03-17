@@ -9,15 +9,9 @@ inputs:
 runs:
   using: "composite"
   steps:
-  - run: echo test
-    shell: bash
   - name: prepare config file
     shell: bash -euxo pipefail {0}
-    run: envsubst < lint.config.yaml > lint.config.yaml
-  - run: echo $(cat lint.config.yaml)
-    shell: bash
-  - run: echo "$(<lint.config.yaml)"
-    shell: bash
+    run: envsubst < lint2.config.yaml > lint2.config.yaml
   - name: Lint plugin
     shell: bash
     run: |
@@ -28,7 +22,7 @@ runs:
       go install
       popd
 
-      plugincheck2 -strict -config lint.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
+      plugincheck2 -strict -config lint2.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
     env:
       ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
       DEBUG: 1
