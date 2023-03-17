@@ -17,6 +17,14 @@ jobs:
         git clone https://github.com/grafana/plugin-validator
         pushd ./plugin-validator/pkg/cmd/plugincheck2
         git log -1
+        go install
+        popd
+
+        plugincheck2 -strict -config lint.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
+    env:
+      ENABLE_VERSION_ANALYZER: ${{ inputs.enable-version-analyzer }}
+      DEBUG: 1
+
   lint:
     runs-on: ubuntu-latest
     steps:
