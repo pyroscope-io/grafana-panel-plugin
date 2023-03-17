@@ -28,6 +28,7 @@ jobs:
           path: lint.config.yaml
       - name: Lint plugin
         run: |
+          export PATH="$(go env GOPATH)/bin/:$PATH"
           pushd ./plugin-validator/pkg/cmd/plugincheck2
           go build .
           popd
