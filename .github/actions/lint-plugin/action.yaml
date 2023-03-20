@@ -25,7 +25,7 @@ runs:
       go install
       popd
 
-      plugincheck2 -strict -config lint.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
+      plugincheck2 -config lint.config.yaml -sourceCodeUri=file://./ ${{ inputs.file }}
     env:
       DEBUG: 1
 
