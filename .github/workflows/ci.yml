@@ -20,6 +20,5 @@ jobs:
       - uses: ./.github/actions/lint-plugin/
         with:
           file: ${{ steps.package-plugin.outputs.archive }}
-          # there's a false positive happening
-          # TODO: update after https://github.com/grafana/plugin-validator/issues/105 is fixed
+          # in PRs the version won't be correct, so there's no point checking it
           enable-version-analyzer: false
