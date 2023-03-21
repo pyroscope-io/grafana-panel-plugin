@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-node/
-      - run: yarn sign
       - uses: ./.github/actions/package-plugin/
         id: package-plugin
         with:
@@ -21,4 +20,5 @@ jobs:
       - uses: ./.github/actions/lint-plugin/
         with:
           file: ${{ steps.package-plugin.outputs.archive }}
+          # in PRs the version won't be correct, so there's no point checking it
           enable-version-analyzer: false

@@ -1,8 +1,0 @@
-global:
-  enabled: true
-  jsonOutput: false
-  reportAll: true
-
-analyzers:
-  version:
-    enabled: ${ENABLE_VERSION_ANALYZER}

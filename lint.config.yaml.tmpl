@@ -1,0 +1,12 @@
+global:
+  enabled: true
+  jsonOutput: false
+  reportAll: false
+
+analyzers:
+  version:
+    enabled: ${ENABLE_VERSION_ANALYZER}
+  trackingscripts:
+    # there's a false positive happening
+    # TODO: update after https://github.com/grafana/plugin-validator/issues/105 is fixed
+    enabled: false
